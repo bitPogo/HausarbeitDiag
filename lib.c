@@ -28,11 +28,56 @@ static void det(
  */
 static mpfr_t Zero;
 /**
- * @var Zero | unsigend short | if Zero is set or not
+ * @var ZeroIsInit | unsigend short | if Zero is set or not
  */
 static unsigned short ZeroIsInit = FALSE;
-
+/**
+ * @var GradFactor | mpfr_t | factor to transform minutes/seconds in grade
+ */
+static mpfr_t GradFactor;
+/**
+ * @var GradeFactorIsInit | unsigend short | if GradFactor is set or not
+ */
+static unsigned short GradeFactorIsInit = FALSE;
 /*-------------------LibFunctions Definition---------------*/
+/**
+ * Transform grade, minutes and seconds to grades
+ * @param Return | mpfr_t | the computed Grade
+ * @param Grade | mpfr_t | the start grades
+ * @param Minutes | mpfr_t | the start minutes
+ * @param Seconds | mpfr_t | the start seconds
+ * @param Round | mpfr_rnd_t | which rounding to use
+ */
+extern void toGrade(
+        mpfr_t Return,
+        mpfr_t Grade,
+        mpfr_t Minutes,
+        mpfr_t Seconds,
+        mpfr_rnd_t Round
+)
+{
+    mpfr_t Tmp;
+
+    mpfr_init( Tmp );
+
+    if( FALSE == GradeFactorIsInit )
+    {
+        mpfr_set_ui( Tmp, 1, Round );
+        mpfr_div_ui( GradFactor, Tmp, 60 );
+        GradeFactorIsInit = TRUE;
+    }
+
+    /* Seconds to Minutes */
+    mpfr_mul( Tmp, Seconds, GradFactor, Round );
+    /* add Seconds to Current Minutes */
+    mpfr_add( Tmp, Minutes, Tmp, Round );
+    /* Minutes to Grade */
+    mpfr_mul( Tmp, Tmp, GradFactor, Round );
+    /* add Minutes to Grade */
+    mpfr_mul( Return, Grade, Tmp, Round );
+    return;
+}
+
 /**
  * Mirrows a point on x-axis
  * @param Return | array of mpfr_t | n = 2 | the mirrowed point

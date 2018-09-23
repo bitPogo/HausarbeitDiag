@@ -1,6 +1,6 @@
 CC=gcc
-CFLAGS=-Wall -Werror -pedantic -g
-OBJ=main.c
+CFLAGS=-Wall -Werror -pedantic -g -std=c11
+OBJ=main.c lib.h lib.c
 NAME=pytagoGlob
 LIBS= -lm -lgmp -lmpfr
 DEBUG= -D DEBUG
@@ -11,6 +11,7 @@ DEBUG= -D DEBUG
 #gcc -o collision0 collison.c -lgmp -lmpfr -lcrypto  -lpthread -lm
 #gcc -o collision1 collisonS.c -lgmp -lmpfr -lcrypto  -lpthread -lm
 #gcc -o collision2 collison2.c -lgmp -lmpfr -lcrypto  -lpthread -lm
+
 default:
 	$(CC) -o $(NAME) $(OBJ) $(LIBS) $(CFLAGS)
 debug:

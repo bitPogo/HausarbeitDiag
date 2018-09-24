@@ -45,24 +45,28 @@ extern void toGrad(
 /**
  * Mirrows a point on x-axis
  * @param Return | array of mpfr_t | n = 2 | the mirrowed point
+ * @param X | mpfr_t | Zeropoint of X
  * @param Point | array of mpfr_t | n = 2 | the original point
  * @param Round | mpfr_rnd_t | which rounding to use
  */
-extern void mirrowPointOnX( mpfr_t* Return, mpfr_t* Point, mpfr_rnd_t Round );
+extern void mirrowPointOnX( mpfr_t* Return, mpfr_t X, mpfr_t* Point, mpfr_rnd_t Round );
 /**
  * Mirrows a point on y-axis
  * @param Return | array of mpfr_t | n = 2 | the mirrowed point
+ * @param X | mpfr_t | Zeropoint of X
  * @param Point | array of mpfr_t | n = 2 | the original point
  * @param Round | mpfr_rnd_t | which rounding to use
  */
-extern void mirrowPointOnY( mpfr_t* Return, mpfr_t* Point, mpfr_rnd_t Round );
+extern void mirrowPointOnY( mpfr_t* Return, mpfr_t YAxis, mpfr_t* Point, mpfr_rnd_t Round );
 /**
  * Mirrows a point on x- and y-axis
  * @param Return | array of mpfr_t | n = 2 | the mirrowed point
+ * @param X | mpfr_t | Zeropoint of X
+ * @param Y | mpfr_t | Zeropoint of Y
  * @param Point | array of mpfr_t | n = 2 | the original point
  * @param Round | mpfr_rnd_t | which rounding to use
  */
-extern void mirrowPoint( mpfr_t* Return, mpfr_t* Point, mpfr_rnd_t Round );
+extern void mirrowPoint( mpfr_t* Return, mpfr_t X, mpfr_t Y, mpfr_t* Point, mpfr_rnd_t Round );
 /**
  * intersectLine computes the touchpoints of to given a line and a second line
  * @param Return | array of mpfr_t | n = 2 | the computed touchpoints
@@ -126,6 +130,23 @@ extern unsigned short intersectCircles(
  * @return | TRUE or FALSE
  */
 extern unsigned short isDigit( char Char, unsigned  short IsHex );
+/**
+ * Caculate the grade by given radians and
+ * @param Return | mpfr_t | the computed degree
+ * @param Radians | mpfr_t | the given radians
+ * @param Diameter | mpfr_t | the given diameter
+ * @param Round | mpfr_rnd_t | which rounding to use
+ */
+extern void getDegreeOnCircle( mpfr_t Return, mpfr_t Radians, mpfr_t Diameter, mpfr_rnd_t Round );
+/**
+ * Rotates a point at a given Point
+ * @param Return | array of mpfr_t | n = 2 | the computed rotated point
+ * @param PointA | array of mpfr_t | n = 2 | Point which should be rotated
+ * @param PointB | array of mpfr_t | n = 2 | Point which should be the center of rotation
+ * @param Degree | mpfr_t | degree for rotation
+ * @param Round | mpfr_rnd_t | which rounding to use
+ */
+extern void rotatePoint( mpfr_t* Return, mpfr_t* PointA, mpfr_t* PointB, mpfr_t Degree, mpfr_rnd_t Round );
 /**
  * Prints a error-message to stderr and quits the programm
  * @param Message | const char* | the message

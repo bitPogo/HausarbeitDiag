@@ -454,6 +454,19 @@ void makePlanimetik(
     printf(")");
     fflush( stdout );
 #endif
+
+    if( 10 != BaseX )
+    {
+        free(X);
+    }
+    if( 10 != BaseY )
+    {
+        free(Y);
+    }
+    if( 10 != BaseLength )
+    {
+        free(Length);
+    }
 }
 
 void makeHZPointsPlatim()
@@ -592,10 +605,28 @@ void makeHZPointsPlatim()
     printf(")");
     fflush( stdout );
 #endif
+    mpfr_clear( Tmp );
+    mpfr_clear( Tmp2 );
+    mpfr_free_cache ();
 }
-
-makeLimitsPlatim()
+/* GKL...4 Einheiten bogenmass */
+void makeLimitsPlatim()
 {
+    mpfr_t Diameter, Radians, Degree;
+
+    mpfr_init( Diameter );
+    mpfr_init( Radians );
+    mpfr_mul_si( Diameter, Hilfskonstrukt->KH, 2, Round );
+    mpfr_mul_si( Radians, Hilfskonstrukt->Einheit, 4, Round );
+    mpfr_mul_si( Radians, Radians, 18, Round );
+    /* 18 mal : see 119 */
+    getDegreeOnCircle( Degree, Radians, Diameter, Round );
+
+    mpfr_mul_si( Radians, Hilfskonstrukt->Einheit, 4, Round );
+    mpfr_mul_si( Radians, Radians, -18, Round );
+    mpfr_clear( Diameter );
+    mpfr_clear( Radians );
+    mpfr_free_cache ();
 
 }
 

@@ -24,21 +24,22 @@ static void det(
         mpfr_rnd_t Round
 );
 /**
- * @var Zero | mpfr_t | 0 for mpfr
- */
-static mpfr_t Zero;
-/**
- * @var ZeroIsInit | unsigend short | if Zero is set or not
- */
-static unsigned short ZeroIsInit = FALSE;
-/**
  * @var GradFactor | mpfr_t | factor to transform minutes/seconds in grade
  */
 static mpfr_t GradFactor;
 /**
  * @var GradFactorIsInit | unsigend short | if GradFactor is set or not
  */
+
 static unsigned short GradFactorIsInit = FALSE;
+/**
+ * @var Pi | mpfr_t | Pi
+ */
+static mpfr_t Pi;
+/**
+ * @var PiIsInit | unsigend short | if pi is set or not
+ */
+static unsigned short PiIsInit = FALSE;
 /*-------------------LibFunctions Definition---------------*/
 /**
  * Transform grade, minutes and seconds to grades
@@ -81,53 +82,45 @@ extern void toGrad(
 /**
  * Mirrows a point on x-axis
  * @param Return | array of mpfr_t | n = 2 | the mirrowed point
+ * @param X | mpfr_t | Zeropoint of X
  * @param Point | array of mpfr_t | n = 2 | the original point
  * @param Round | mpfr_rnd_t | which rounding to use
  */
-extern void mirrowPointOnX( mpfr_t* Return, mpfr_t* Point, mpfr_rnd_t Round )
+extern void mirrowPointOnX( mpfr_t* Return, mpfr_t X, mpfr_t* Point, mpfr_rnd_t Round )
 {
-    if( FALSE == ZeroIsInit )
-    {
-        mpfr_init_set_ui( Zero, 0, MPFR_RNDZ );
-        ZeroIsInit = TRUE;
-    }
-
     /* New_y = Old_y */
     mpfr_set( Return[ 1 ], Point[ 1 ], Round );
     /* New_x = 0-Old_x */
-    mpfr_sub( Return[ 0 ], Zero, Point[ 0 ], Round  );
+    mpfr_sub( Return[ 0 ], X, Point[ 0 ], Round  );
 }
 
 /**
  * Mirrows a point on y-axis
  * @param Return | array of mpfr_t | n = 2 | the mirrowed point
+ * @param X | mpfr_t | Zeropoint of X
  * @param Point | array of mpfr_t | n = 2 | the original point
  * @param Round | mpfr_rnd_t | which rounding to use
  */
-extern void mirrowPointOnY( mpfr_t* Return, mpfr_t* Point, mpfr_rnd_t Round )
+extern void mirrowPointOnY( mpfr_t* Return, mpfr_t YAxis, mpfr_t* Point, mpfr_rnd_t Round )
 {
-   if( FALSE == ZeroIsInit )
-   {
-        mpfr_init_set_ui( Zero, 0, MPFR_RNDZ );
-        ZeroIsInit = TRUE;
-   }
-   
    /* New_x = Old_x */
    mpfr_set( Return[ 0 ], Point[ 0 ], Round );
     /* New_y = 0-Old_y */
-   mpfr_sub( Return[ 1 ], Zero, Point[ 1 ], Round  );
+   mpfr_sub( Return[ 1 ], YAxis, Point[ 1 ], Round  );
 
 }
 /**
  * Mirrows a point on x- and y-axis
  * @param Return | array of mpfr_t | n = 2 | the mirrowed point
+ * @param X | mpfr_t | Zeropoint of X
+ * @param Y | mpfr_t | Zeropoint of Y
  * @param Point | array of mpfr_t | n = 2 | the original point
  * @param Round | mpfr_rnd_t | which rounding to use
  */
-extern void mirrowPoint( mpfr_t* Return, mpfr_t* Point, mpfr_rnd_t Round )
+extern void mirrowPoint( mpfr_t* Return, mpfr_t X, mpfr_t Y, mpfr_t* Point, mpfr_rnd_t Round )
 {
-    mirrowPointOnX( Return, Point, Round );
-    mirrowPointOnY( Return, Return, Round );
+    mirrowPointOnX( Return, X, Point, Round );
+    mirrowPointOnY( Return, Y, Return, Round );
 }
 /**
  * Computes the determinate of tow given vectors
@@ -626,7 +619,7 @@ extern unsigned short intersectCircles(
 )
 {
 
-    mpfr_t ABX, ABXExp, ABY, ABYExp, DistanceCenter, X, Y, EX0, EX1, EY0, EY1, Tmp1;
+    mpfr_t ABX, ABXExp, ABY, ABYExp, DistanceCenter, X, Y, RadiusAExp, RadiusBExp, EX0, EX1, EY0, EY1, Tmp1;
     int Compare;
 
 #ifdef DEBUG
@@ -659,6 +652,8 @@ extern unsigned short intersectCircles(
      */
     mpfr_init( Y );
 
+    mpfr_init( RadiusAExp );
+    mpfr_init( RadiusBExp );
     mpfr_init( EX0 );
     mpfr_init( EX1 );
     mpfr_init( EY0 );
@@ -714,6 +709,8 @@ extern unsigned short intersectCircles(
         mpfr_clear( DistanceCenter );
         mpfr_clear( X );
         mpfr_clear( Y );
+        mpfr_clear( RadiusAExp );
+        mpfr_clear( RadiusBExp );
         mpfr_clear( EX0 );
         mpfr_clear( EX1 );
         mpfr_clear( EY0 );
@@ -729,13 +726,13 @@ extern unsigned short intersectCircles(
     /* Distance^2 */
     mpfr_pow_ui( Tmp1, DistanceCenter, 2, Round );
     /* ARadius^2 */
-    mpfr_pow_ui( ARadius, ARadius, 2, Round );
+    mpfr_pow_ui( RadiusAExp, ARadius, 2, Round );
     /* BRadius^2 */
-    mpfr_pow_ui( BRadius, BRadius, 2, Round );
+    mpfr_pow_ui( RadiusBExp, BRadius, 2, Round );
     /* ARadius^2 + Distance^2 */
-    mpfr_add( Tmp1, ARadius, DistanceCenter, Round );
+    mpfr_add( Tmp1, RadiusAExp, DistanceCenter, Round );
     /* ARadius^2 + Distance^2- BRadius^2 */
-    mpfr_sub( Tmp1, Tmp1, BRadius, Round );
+    mpfr_sub( Tmp1, Tmp1, RadiusBExp, Round );
     /* 2 * Distance */
     mpfr_mul_ui( X, DistanceCenter, 2, Round );
     /* ( ARadius^2 + Distance^2- BRadius^2)/(2*Distance) */
@@ -763,6 +760,8 @@ extern unsigned short intersectCircles(
         mpfr_clear( DistanceCenter );
         mpfr_clear( X );
         mpfr_clear( Y );
+        mpfr_clear( RadiusAExp );
+        mpfr_clear( RadiusBExp );
         mpfr_clear( EX0 );
         mpfr_clear( EX1 );
         mpfr_clear( EY0 );
@@ -826,6 +825,8 @@ extern unsigned short intersectCircles(
         mpfr_clear( DistanceCenter );
         mpfr_clear( X );
         mpfr_clear( Y );
+        mpfr_clear( RadiusAExp );
+        mpfr_clear( RadiusBExp );
         mpfr_clear( EX0 );
         mpfr_clear( EX1 );
         mpfr_clear( EY0 );
@@ -887,6 +888,8 @@ extern unsigned short intersectCircles(
     mpfr_clear( DistanceCenter );
     mpfr_clear( X );
     mpfr_clear( Y );
+    mpfr_clear( RadiusAExp );
+    mpfr_clear( RadiusBExp );
     mpfr_clear( EX0 );
     mpfr_clear( EX1 );
     mpfr_clear( EY0 );
@@ -895,7 +898,86 @@ extern unsigned short intersectCircles(
     mpfr_free_cache ();
     return SUCCESS;
 }
+/**
+ * Caculate the grade by given radians and
+ * @param Return | mpfr_t | the computed degree
+ * @param Radians | mpfr_t | the given radians
+ * @param Diameter | mpfr_t | the given diameter
+ * @param Round | mpfr_rnd_t | which rounding to use
+ */
+extern void getDegreeOnCircle( mpfr_t Return, mpfr_t Radians, mpfr_t Diameter, mpfr_rnd_t Round )
+{
+    //mpfr_const_pi
+    /* b = alpha/360°⋅pi⋅d
+     * (b*360°/pi)/d = alpha
+     * d = 2*r */
+    mpfr_t Tmp;
 
+    mpfr_init( Tmp );
+
+    if( FALSE == PiIsInit )
+    {
+        mpfr_init( Pi );
+        mpfr_const_pi( Pi, Round );
+        PiIsInit = TRUE;
+    }
+    /* b*360° */
+    mpfr_mul_ui( Tmp, Radians, 360, Round );
+    /* (b*360°/pi) */
+    mpfr_div( Tmp, Radians, Pi, Round );
+    /* (b*360°/pi)/d */
+    mpfr_div( Return, Tmp, Diameter, Round );
+    mpfr_clear( Tmp );
+    mpfr_free_cache ();
+}
+/**
+ * Rotates a point at a given Point
+ * @param Return | array of mpfr_t | n = 2 | the computed rotated point
+ * @param PointA | array of mpfr_t | n = 2 | Point which should be rotated
+ * @param PointB | array of mpfr_t | n = 2 | Point which should be the center of rotation
+ * @param Degree | mpfr_t | degree for rotation
+ * @param Round | mpfr_rnd_t | which rounding to use
+ */
+extern void rotatePoint( mpfr_t* Return, mpfr_t* PointA, mpfr_t* PointB, mpfr_t Degree, mpfr_rnd_t Round )
+{
+    /* x' = x1 + cos(\theta) * (x - x1) - sin(\theta) * (y - y1)
+     * y' = y1 + sin(\theta) * (x - x1) + cos(\theta) * (y - y1)
+    */
+    mpfr_t Sin, Cos, X, Y, Tmp1, Tmp2;
+    mpfr_init( Sin );
+    mpfr_init( Cos );
+    mpfr_init( X );
+    mpfr_init( Y );
+    mpfr_init( Tmp1 );
+    mpfr_init( Tmp2 );
+
+    /* sin(\theta) | cos(\theta) */
+    mpfr_sin_cos( Sin, Cos, Degree, Round);
+    /* (x - x_1) */
+    mpfr_sub( X, PointB[ 0 ], PointA[ 0 ], Round  );
+    /* (y - y_1) */
+    mpfr_sub( Y, PointB[ 1 ], PointA[ 1 ], Round  );
+
+    /* x' = x1 + cos(\theta) * (x - x1) - sin(\theta) * (y - y1) */
+    /* cos(\theta) * (x - x1) */
+    mpfr_mul( Tmp1, X, Cos, Round );
+    /* sin(\theta) * (y - y1) */
+    mpfr_mul( Tmp2, Y, Sin, Round );
+    /* cos(\theta) * (x - x1) - sin(\theta) * (y - y1) */
+    mpfr_sub( Tmp1, Tmp1, Tmp2, Round );
+    /* x1 + cos(\theta) * (x - x1) - sin(\theta) * (y - y1) */
+    mpfr_add( Return[ 0 ], PointB[ 0 ], Tmp1, Round );
+
+    /* y' = y1 + sin(\theta) * (x - x1) + cos(\theta) * (y - y1) */
+    /* sin(\theta) * (x - x1) */
+    mpfr_mul( Tmp1, X, Sin, Round );
+    /* cos(\theta) * (y - y1) */
+    mpfr_mul( Tmp2, Y, Cos, Round );
+    /* sin(\theta) * (x - x1) + cos(\theta) * (y - y1) */
+    mpfr_add( Tmp1, Tmp1, Tmp2, Round );
+    /* y1 + sin(\theta) * (x - x1) + cos(\theta) * (y - y1) */
+    mpfr_add( Return[ 1 ], PointB[ 1 ], Tmp1, Round );
+}
 /**
  * Prints a error-message to stderr and quits the programm
  * @param Message | const char* | the message

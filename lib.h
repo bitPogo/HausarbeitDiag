@@ -6,6 +6,7 @@
 #include <gmp.h>
 #include <mpfr.h>
 #include <stdlib.h>
+#include <string.h>
 #ifndef FALSE
 #define FALSE 0
 #endif
@@ -28,13 +29,13 @@
 /*-------------------LibFunctions Declaration---------------*/
 /**
  * Transform grade, minutes and seconds to grades
- * @param Return | mpfr_t | the computed Grade
- * @param Grade | mpfr_t | the start grades
+ * @param Return | mpfr_t | the computed Grad
+ * @param Grad | mpfr_t | the start grades
  * @param Minutes | mpfr_t | the start minutes
  * @param Seconds | mpfr_t | the start seconds
  * @param Round | mpfr_rnd_t | which rounding to use
  */
-extern void toGrade(
+extern void toGrad(
         mpfr_t Return,
         mpfr_t Grade,
         mpfr_t Minutes,
@@ -118,4 +119,31 @@ extern unsigned short intersectCircles(
         mpfr_t BRadius,
         mpfr_rnd_t Round
 );
+/**
+ * Checks if a given char is a diget or not
+ * @param Char | char | the given diget
+ * @param IsHex | TRUE or FALSE | if hexdigets are allowed
+ * @return | TRUE or FALSE
+ */
+extern unsigned short isDigit( char Char, unsigned  short IsHex );
+/**
+ * Prints a error-message to stderr and quits the programm
+ * @param Message | const char* | the message
+ */
+extern void errorAndOut( const char* Message );
+/**
+ * Checks if a given string is nummeric or not
+ * Also hexstrings with prefix x|X or ocatalstrings with prefix o|O are allowed
+ * @param String | const char* | the given input string
+ * @return -1 if it's not a number or Base 8|10|16
+ */
+extern short validateString( const char* String );
+/**
+ * Returns a substring of given String
+ * @param Source | char* | the input string
+ * @param From | int | the startposition of the subset
+ * @param Length | int | Length of the subset
+ * @return | char* | the computed subset
+ */
+extern char* substring( char* Source, int From, int Length );
 #endif

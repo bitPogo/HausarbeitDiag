@@ -36,21 +36,21 @@ static unsigned short ZeroIsInit = FALSE;
  */
 static mpfr_t GradFactor;
 /**
- * @var GradeFactorIsInit | unsigend short | if GradFactor is set or not
+ * @var GradFactorIsInit | unsigend short | if GradFactor is set or not
  */
-static unsigned short GradeFactorIsInit = FALSE;
+static unsigned short GradFactorIsInit = FALSE;
 /*-------------------LibFunctions Definition---------------*/
 /**
  * Transform grade, minutes and seconds to grades
- * @param Return | mpfr_t | the computed Grade
- * @param Grade | mpfr_t | the start grades
+ * @param Return | mpfr_t | the computed Grad
+ * @param Grad | mpfr_t | the start grades
  * @param Minutes | mpfr_t | the start minutes
  * @param Seconds | mpfr_t | the start seconds
  * @param Round | mpfr_rnd_t | which rounding to use
  */
-extern void toGrade(
+extern void toGrad(
         mpfr_t Return,
-        mpfr_t Grade,
+        mpfr_t Grad,
         mpfr_t Minutes,
         mpfr_t Seconds,
         mpfr_rnd_t Round
@@ -60,21 +60,21 @@ extern void toGrade(
 
     mpfr_init( Tmp );
 
-    if( FALSE == GradeFactorIsInit )
+    if( FALSE == GradFactorIsInit )
     {
         mpfr_set_ui( Tmp, 1, Round );
-        mpfr_div_ui( GradFactor, Tmp, 60 );
-        GradeFactorIsInit = TRUE;
+        mpfr_div_ui( GradFactor, Tmp, 60, Round );
+        GradFactorIsInit = TRUE;
     }
 
     /* Seconds to Minutes */
     mpfr_mul( Tmp, Seconds, GradFactor, Round );
     /* add Seconds to Current Minutes */
     mpfr_add( Tmp, Minutes, Tmp, Round );
-    /* Minutes to Grade */
+    /* Minutes to Grad */
     mpfr_mul( Tmp, Tmp, GradFactor, Round );
-    /* add Minutes to Grade */
-    mpfr_mul( Return, Grade, Tmp, Round );
+    /* add Minutes to Grad */
+    mpfr_mul( Return, Grad, Tmp, Round );
     return;
 }
 
@@ -200,6 +200,7 @@ extern unsigned short intersectLines(
     mpfr_init( Tmp1 );
 #ifdef DEBUG
     printf( "\nStart line-line-intersection." );
+    fflush( stdout );
 #endif
     /*
      * DiffAX = PointAEnd_x - PointAStart_x
@@ -214,6 +215,7 @@ extern unsigned short intersectLines(
     mpfr_out_str ( stdout, 10, 0, DiffAX, Round );
     printf( "\nDiffAY is:" );
     mpfr_out_str ( stdout, 10, 0, DiffAY, Round );
+    fflush( stdout );
 #endif
     /*
      * DffBX = PointBEnd_x - PointBStart_x
@@ -228,12 +230,14 @@ extern unsigned short intersectLines(
     mpfr_out_str ( stdout, 10, 0, DiffBX, Round );
     printf( "\nDiffBY is:" );
     mpfr_out_str ( stdout, 10, 0, DiffBY, Round );
+    fflush( stdout );
 #endif
     /* div = det( DiffAX, DiffAY, DiffBX, DiffBY ) */
     det( DiffAX, DiffAY, DiffBX, DiffBY, Div, Round );
 #ifdef DEBUG
     printf( "\nDiv is:" );
     mpfr_out_str ( stdout, 10, 0, Div, Round );
+    fflush( stdout );
 #endif
     Compare = mpfr_cmp_si( Div, 0 );
     if( CMP_EQUAL == Compare )
@@ -269,6 +273,7 @@ extern unsigned short intersectLines(
     mpfr_out_str ( stdout, 10, 0, DA, Round );
     printf( "\nDB is:" );
     mpfr_out_str ( stdout, 10, 0, DB, Round );
+    fflush( stdout );
 #endif
     /*             X        Y
      * DiffX = ( DiffAX, DiffBX )
@@ -289,12 +294,14 @@ extern unsigned short intersectLines(
     mpfr_div( Return[ 1 ], Tmp1, Div, Round );
 #ifdef DEBUG
     printf( "\nIntersection-X is:" );
-        mpfr_out_str ( stdout, 10, 0, Return[ 0 ], Round );
+    mpfr_out_str ( stdout, 10, 0, Return[ 0 ], Round );
+    fflush( stdout );
 #endif
 
 #ifdef DEBUG
     printf( "\nIntersection-Y is:" );
-        mpfr_out_str ( stdout, 10, 0, Return[ 1 ], Round );
+    mpfr_out_str ( stdout, 10, 0, Return[ 1 ], Round );
+    fflush( stdout );
 #endif
 
     /* Housekeeping */
@@ -335,6 +342,7 @@ extern unsigned short intersectCircleLine(
         int Compare;
 #ifdef DEBUG
     printf( "\nStart circle-line-intersection." );
+    fflush( stdout );
 #endif
 
         mpfr_init( ABX );
@@ -379,6 +387,7 @@ extern unsigned short intersectCircleLine(
         mpfr_out_str ( stdout, 10, 0, ACX, Round );
         printf( "\nACY is:" );
         mpfr_out_str ( stdout, 10, 0, ACY, Round );
+        fflush( stdout );
 #endif
 
         /* A = ABX^2 + ABY^2 */
@@ -391,6 +400,7 @@ extern unsigned short intersectCircleLine(
 #ifdef DEBUG
         printf( "\nA is:" );
         mpfr_out_str ( stdout, 10, 0, A, Round );
+        fflush( stdout );
 #endif
 
         /* BBy2 = ABX*ACX + ABY*ACY */
@@ -403,6 +413,7 @@ extern unsigned short intersectCircleLine(
 #ifdef DEBUG
         printf( "\nBBy2 is:" );
         mpfr_out_str ( stdout, 10, 0, BBy2, Round );
+        fflush( stdout );
 #endif
         /* C = ACX^2 + ACY^2 - Radius^2 */
         /* ACX^2 */
@@ -419,6 +430,7 @@ extern unsigned short intersectCircleLine(
 #ifdef DEBUG
         printf( "\nC is:" );
         mpfr_out_str ( stdout, 10, 0, C, Round );
+        fflush( stdout );
 #endif
 
         /* PBy2 = BBy2/a */
@@ -426,6 +438,7 @@ extern unsigned short intersectCircleLine(
 #ifdef DEBUG
         printf( "\nPBy2 is:" );
         mpfr_out_str ( stdout, 10, 0, PBy2, Round );
+        fflush( stdout );
 #endif
 
         /* Q = C / A */
@@ -433,6 +446,7 @@ extern unsigned short intersectCircleLine(
 #ifdef DEBUG
         printf( "\nQ is:" );
         mpfr_out_str ( stdout, 10, 0, Q, Round );
+        fflush( stdout );
 #endif
         /* Found = PBy2^2 - Q */
         /* PBy2^2 */
@@ -442,12 +456,14 @@ extern unsigned short intersectCircleLine(
 #ifdef DEBUG
     printf( "\nFound:" );
     mpfr_out_str ( stdout, 10, 0, Found, Round );
+    fflush( stdout );
 #endif
         Compare = mpfr_cmp_ui( Found, 0 );
         if( CMP_LESS == Compare )
         {
 #ifdef DEBUG
             printf( "\nNoting found." );
+            fflush( stdout );
 #endif
             /* Housekeeping */
             mpfr_clear( ABX );
@@ -486,12 +502,14 @@ extern unsigned short intersectCircleLine(
 #ifdef DEBUG
         printf( "\nAbscalingFactor1 is:" );
         mpfr_out_str ( stdout, 10, 0, AbScalingFactor1, Round );
+        fflush( stdout );
 #endif
         /* -1 * PBy2 - sqrt( Found ) */
         mpfr_sub( AbScalingFactor2, Tmp1, Tmp2, Round );
 #ifdef DEBUG
         printf( "\nAbscalingFactor2 is:" );
         mpfr_out_str ( stdout, 10, 0, AbScalingFactor2, Round );
+        fflush( stdout );
 #endif
         /*
          * P^1_x = PointA_x - ABX * AbScalingFactor1
@@ -508,15 +526,18 @@ extern unsigned short intersectCircleLine(
 #ifdef DEBUG
         printf( "\nIntersection-1-X is:" );
         mpfr_out_str ( stdout, 10, 0, Return[ 0 ], Round );
+        fflush( stdout );
 #endif
 #ifdef DEBUG
         printf( "\nIntersection-1-Y is:" );
         mpfr_out_str ( stdout, 10, 0, Return[ 1 ], Round );
+        fflush( stdout );
 #endif
         if( CMP_EQUAL == Compare )
         {
 #ifdef DEBUG
             printf( "\nOne touch found." );
+            fflush( stdout );
 #endif
             /* Housekeeping */
             mpfr_clear( ABX );
@@ -555,10 +576,12 @@ extern unsigned short intersectCircleLine(
 #ifdef DEBUG
         printf( "\nIntersection-2-X is:" );
         mpfr_out_str ( stdout, 10, 0, Return[ 2 ], Round );
+        fflush( stdout );
 #endif
 #ifdef DEBUG
         printf( "\nIntersection-2-Y is:" );
         mpfr_out_str ( stdout, 10, 0, Return[ 3 ], Round );
+        fflush( stdout );
 #endif
         /* Housekeeping */
         mpfr_clear( ABX );
@@ -608,6 +631,7 @@ extern unsigned short intersectCircles(
 
 #ifdef DEBUG
     printf( "\nStart circle-circle-intersection." );
+    fflush( stdout );
 #endif
 
     if(
@@ -652,6 +676,7 @@ extern unsigned short intersectCircles(
     mpfr_out_str ( stdout, 10, 0, ABX, Round );
     printf( "\nABY is:" );
     mpfr_out_str ( stdout, 10, 0, ABY, Round );
+    fflush( stdout );
 #endif
 
     /*
@@ -671,6 +696,7 @@ extern unsigned short intersectCircles(
 #ifdef DEBUG
     printf( "\nDistance to center is:" );
     mpfr_out_str ( stdout, 10, 0, DistanceCenter, Round );
+    fflush( stdout );
 #endif
     /* 0 ?= Distance -> same point */
     Compare = mpfr_cmp_si( DistanceCenter, 0 );
@@ -678,6 +704,7 @@ extern unsigned short intersectCircles(
     {
 #ifdef DEBUG
         printf( "\nno intersection found." );
+        fflush( stdout );
 #endif
         /* Housekeeping */
         mpfr_clear( ABX );
@@ -716,6 +743,7 @@ extern unsigned short intersectCircles(
 #ifdef DEBUG
     printf( "\nDistance X is:" );
     mpfr_out_str ( stdout, 10, 0, X, Round );
+    fflush( stdout );
 #endif
     /*
      *  y = a^2 - x^2
@@ -751,6 +779,7 @@ extern unsigned short intersectCircles(
 #ifdef DEBUG
     printf( "\nDistance Y is:" );
     mpfr_out_str ( stdout, 10, 0, Y, Round );
+    fflush( stdout );
 #endif
 
     /*
@@ -775,16 +804,19 @@ extern unsigned short intersectCircles(
     {
 #ifdef DEBUG
         printf( "\nFound only one intersection." );
+        fflush( stdout );
 #endif
 
 #ifdef DEBUG
         printf( "\nIntersection-1-X is:" );
         mpfr_out_str ( stdout, 10, 0, Return[ 0 ], Round );
+        fflush( stdout );
 #endif
 
 #ifdef DEBUG
         printf( "\nIntersection-1-Y is:" );
         mpfr_out_str ( stdout, 10, 0, Return[ 1 ], Round );
+        fflush( stdout );
 #endif
         /* Housekeeping */
         mpfr_clear( ABX );
@@ -832,18 +864,22 @@ extern unsigned short intersectCircles(
 #ifdef DEBUG
     printf( "\nIntersection-1-X is:" );
     mpfr_out_str ( stdout, 10, 0, Return[ 0 ], Round );
+    fflush( stdout );
 #endif
 #ifdef DEBUG
     printf( "\nIntersection-1-Y is:" );
     mpfr_out_str ( stdout, 10, 0, Return[ 1 ], Round );
+    fflush( stdout );
 #endif
 #ifdef DEBUG
     printf( "\nIntersection-2-X is:" );
     mpfr_out_str ( stdout, 10, 0, Return[ 2 ], Round );
+    fflush( stdout );
 #endif
 #ifdef DEBUG
     printf( "\nIntersection-2-Y is:" );
     mpfr_out_str ( stdout, 10, 0, Return[ 3 ], Round );
+    fflush( stdout );
 #endif
     /* Housekeeping */
     mpfr_clear( ABX );
@@ -858,6 +894,187 @@ extern unsigned short intersectCircles(
     mpfr_clear( Tmp1 );
     mpfr_free_cache ();
     return SUCCESS;
+}
+
+/**
+ * Prints a error-message to stderr and quits the programm
+ * @param Message | const char* | the message
+ */
+extern void errorAndOut( const char* Message )
+{
+    fprintf( stderr, "%s\n", Message);
+    exit( 0 );
+}
+/**
+ * Checks if a given char is a diget or not
+ * @param Char | char | the given diget
+ * @param IsHex | TRUE or FALSE | if hexdigets are allowed
+ * @return | TRUE or FALSE
+ */
+extern unsigned short isDigit( char Char, unsigned  short IsHex )
+{
+    if( 48 > Char || 57 < Char )
+    {
+        if( TRUE == IsHex )
+        {
+            if(
+                'a' == Char
+            ||
+                'A' == Char
+            ||
+                'b' == Char
+            ||
+                'B' == Char
+            ||
+                'c' == Char
+            ||
+                'C' == Char
+            ||
+                'd' == Char
+            ||
+                'D' == Char
+            ||
+                'e' == Char
+            ||
+                'E' == Char
+            ||
+                'f' == Char
+            ||
+                'F' == Char
+            )
+            {
+                return TRUE;
+            }
+            else
+            {
+                return FALSE;
+            }
+        }
+        else
+        {
+            return FALSE;
+        }
+    }
+    else
+    {
+        return TRUE;
+    }
+}
+/**
+ * Checks if a given string is nummeric or not
+ * Also hexstrings with prefix x|X or ocatalstrings with prefix o|O are allowed
+ * @param String | const char* | the given input string
+ * @return -1 if it's not a number or Base 8|10|16
+ */
+extern short validateString( const char* String )
+{
+    int Index, Start;
+    short Base;
+    unsigned short IsHex;
+    unsigned short PercusionPoint;
+
+    Base = 10;
+    Start = 0;
+    IsHex = FALSE;
+    PercusionPoint = FALSE;
+
+    if( 0 == strlen( String ) )
+    {
+        return -1;
+    }
+
+    if( 'X' == String[ 0 ] || 'x' == String[ 0 ] )
+    {
+        Start = 1;
+        Base = 16;
+        IsHex = TRUE;
+    }
+    else if( 'O' == String[ 0 ] || 'o' == String[ 0 ] )
+    {
+        Start = 1;
+        Base = 8;
+    }
+
+    for( Index = Start; Index < strlen( String ); Index++ )
+    {
+        if( FALSE == isDigit( String[ Index ], IsHex ) )
+        {
+            if( '.' == String[ Index ] || ',' == String[ Index ] )
+            {
+                if( FALSE == PercusionPoint )
+                {
+                    PercusionPoint = TRUE;
+                }
+                else
+                {
+                    return -1;
+                }
+            }
+        }
+    }
+
+    return Base;
+}
+
+/**
+ * Returns a substring of given String
+ * @param Source | char* | the input string
+ * @param From | int | the startposition of the subset
+ * @param Length | int | Length of the subset
+ * @return | char* | the computed subset
+ */
+extern char* substring( char* Source, int From, int Length )
+{
+    char* Return;
+    int Index1, Index2;
+
+    if( NULL == Source )
+    {
+        return NULL;
+    }
+
+    if(-1 == Length)
+    {
+        Length = strlen( Source );
+    }
+
+    if( 0 >= Length )
+    {
+        return NULL;
+    }
+
+    if( From >= Length )
+    {
+        return NULL;
+    }
+
+
+    if(0 == From && strlen( Source ) == Length)
+    {
+
+        Return = (char *) malloc( ( strlen( Source )+1 )/sizeof(char) );
+        if( NULL == Return )
+        {
+            errorAndOut( "Somethings wrong with the memory, jim." );
+        }
+
+        strcpy( Return , Source );
+        return Return;
+    }
+
+    Return = (char *) malloc( ( ( Length-From ) + 1 )/sizeof(char) );
+    if( NULL == Return )
+    {
+        errorAndOut( "Somethings wrong with the memory, jim." );
+    }
+
+    for( Index1=From, Index2=0; Length>Index2; Index1++, Index2++)
+    {
+        Return[ Index2 ] = Source[ Index1 ];
+    }
+
+    Return[ Index2 ] = '\0';
+    return Return;
 }
 /*
 int main()

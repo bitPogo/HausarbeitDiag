@@ -76,6 +76,9 @@ extern void toGrad(
     mpfr_mul( Tmp, Tmp, GradFactor, Round );
     /* add Minutes to Grad */
     mpfr_mul( Return, Grad, Tmp, Round );
+    /*Housekeeping*/
+    mpfr_clear( Tmp );
+    mpfr_free_cache();
     return;
 }
 
@@ -88,26 +91,53 @@ extern void toGrad(
  */
 extern void mirrowPointOnX( mpfr_t* Return, mpfr_t X, mpfr_t* Point, mpfr_rnd_t Round )
 {
+    mpfr_t BetragPX, BetragX;
+    mpfr_init( BetragPX );
+    mpfr_init( BetragX );
     /* New_y = Old_y */
     mpfr_set( Return[ 1 ], Point[ 1 ], Round );
-    /* New_x = 0-Old_x */
-    mpfr_sub( Return[ 0 ], X, Point[ 0 ], Round  );
+
+    mpfr_abs( BetragPX, Point[ 0 ], Round );
+    mpfr_abs( BetragX, X, Round );
+
+    /* Distance = Midpoint_x - P_x */
+    mpfr_sub( Return[ 0 ], BetragX, BetragPX, Round  );
+    /* New_x = Midpoint_x + Distance */
+    mpfr_add( Return[ 0 ], X, Return[ 0 ], Round  );
+
+    /* Housekeeping */
+    mpfr_clear( BetragPX );
+    mpfr_clear( BetragX );
+    mpfr_free_cache();
 }
 
 /**
  * Mirrows a point on y-axis
  * @param Return | array of mpfr_t | n = 2 | the mirrowed point
- * @param X | mpfr_t | Zeropoint of X
+ * @param Y | mpfr_t | Zeropoint of Y
  * @param Point | array of mpfr_t | n = 2 | the original point
  * @param Round | mpfr_rnd_t | which rounding to use
  */
-extern void mirrowPointOnY( mpfr_t* Return, mpfr_t YAxis, mpfr_t* Point, mpfr_rnd_t Round )
+extern void mirrowPointOnY( mpfr_t* Return, mpfr_t Y, mpfr_t* Point, mpfr_rnd_t Round )
 {
-   /* New_x = Old_x */
-   mpfr_set( Return[ 0 ], Point[ 0 ], Round );
-    /* New_y = 0-Old_y */
-   mpfr_sub( Return[ 1 ], YAxis, Point[ 1 ], Round  );
+    mpfr_t BetragPY, BetragY;
+    mpfr_init( BetragPY );
+    mpfr_init( BetragY );
+    /* New_x = Old_x */
+    mpfr_set( Return[ 0 ], Point[ 0 ], Round );
 
+    mpfr_abs( BetragPY, Point[ 1 ], Round );
+    mpfr_abs( BetragY, Y, Round );
+
+    /* Distance = Midpoint_y - P_y */
+    mpfr_sub( Return[ 1 ], BetragY, BetragPY, Round  );
+    /* New_y = Midpoint_y + Distance */
+    mpfr_add( Return[ 1 ], Y, Return[ 1 ], Round  );
+
+    /* Housekeeping */
+    mpfr_clear( BetragPY );
+    mpfr_clear( BetragY );
+    mpfr_free_cache();
 }
 /**
  * Mirrows a point on x- and y-axis
@@ -559,10 +589,13 @@ extern unsigned short intersectCircleLine(
          * P^2_y = PointA_y - ABY * AbScalingFactor2
          */
         /* ABX * AbScalingFactor2 */
+
         mpfr_mul( Tmp1, ABX, AbScalingFactor2, Round );
         /* PointA_x - ABX * AbScalingFactor2 */
         mpfr_sub( Return[ 2 ], PointA[ 0 ], Tmp1, Round );
         /* ABY * AbScalingFactor2 */
+    printf( "\nhier\n" );
+    fflush( stdout );
         mpfr_mul( Tmp1, ABY, AbScalingFactor2, Round );
         /* PointA_x - ABY * AbScalingFactor2 */
         mpfr_sub( Return[ 3 ], PointA[ 1 ], Tmp1, Round );
@@ -977,6 +1010,14 @@ extern void rotatePoint( mpfr_t* Return, mpfr_t* PointA, mpfr_t* PointB, mpfr_t 
     mpfr_add( Tmp1, Tmp1, Tmp2, Round );
     /* y1 + sin(\theta) * (x - x1) + cos(\theta) * (y - y1) */
     mpfr_add( Return[ 1 ], PointB[ 1 ], Tmp1, Round );
+    /*Housekeeping*/
+    mpfr_clear( Sin );
+    mpfr_clear( Cos );
+    mpfr_clear( X );
+    mpfr_clear( Y );
+    mpfr_clear( Tmp1 );
+    mpfr_clear( Tmp2 );
+    mpfr_free_cache();
 }
 /**
  * Prints a error-message to stderr and quits the programm

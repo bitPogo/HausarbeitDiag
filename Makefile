@@ -4,6 +4,7 @@ OBJ=main.c lib.h lib.c
 NAME=pytagoGlob
 LIBS= -lm -lgmp -lmpfr
 DEBUG= -D DEBUG
+MIRROW= -D MIRROW
 
 #gcc -o collision3 collison3.c -lgmp -lmpfr -lcrypto  -lpthread -lm
 #gcc -o calcFromPrivate calcFromPrivate.c -lgmp -lcrypto -lm
@@ -15,6 +16,10 @@ DEBUG= -D DEBUG
 default:
 	$(CC) -o $(NAME) $(OBJ) $(LIBS) $(CFLAGS)
 debug:
-	$(CC)  $(DEBUG) -o  $(NAME) $(OBJ) $(LIBS) $(CFLAGS)
+	$(CC) $(DEBUG) -o $(NAME) $(OBJ) $(LIBS) $(CFLAGS)
+mirrow:
+	$(CC) $(MIRROW) -o $(NAME) $(OBJ) $(LIBS) $(CFLAGS)
+mirrowDebug:
+	$(CC) $(DEBUG) $(MIRROW) -o $(NAME) $(OBJ) $(LIBS) $(CFLAGS)
 clean:
 	rm -f $(NAME)

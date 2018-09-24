@@ -173,6 +173,7 @@ typedef struct Planimetik
     /* Meridan Punkte */
     mpfr_t Einheit;
     /* Strecken */
+    mpfr_t ZH;
     mpfr_t EH;
     mpfr_t KH;
     mpfr_t OH;
@@ -196,7 +197,7 @@ typedef struct Planimetik
 /*-------------------Vars----------------------*/
 
 mpfr_rnd_t Round;
-Planimetik* Hilfskonstrukt;
+Planimetik* PytagoMap;
 char ErrorBuffer[256];
 
 /*-------------------Functions-----------------*/
@@ -272,43 +273,43 @@ void makePlanimetik(
 {
     int BaseX, BaseY, BaseLength;
 
-    Hilfskonstrukt = ( Planimetik* ) malloc( sizeof( Planimetik ) * 1 );
-    if(NULL == Hilfskonstrukt)
+    PytagoMap = ( Planimetik* ) malloc( sizeof( Planimetik ) * 1 );
+    if(NULL == PytagoMap)
     {
         errorAndOut( "Somethings wrong with the memory, jim." );
     }
-    Hilfskonstrukt->A = ( mpfr_t* ) malloc( sizeof( mpfr_t ) * 2 );
-    if(NULL == Hilfskonstrukt->A )
+    PytagoMap->A = ( mpfr_t* ) malloc( sizeof( mpfr_t ) * 2 );
+    if(NULL == PytagoMap->A )
     {
         errorAndOut( "Somethings wrong with the memory, jim." );
     }
-    Hilfskonstrukt->B = ( mpfr_t* ) malloc( sizeof( mpfr_t ) * 2 );
-    if(NULL == Hilfskonstrukt->B)
+    PytagoMap->B = ( mpfr_t* ) malloc( sizeof( mpfr_t ) * 2 );
+    if(NULL == PytagoMap->B)
     {
         errorAndOut( "Somethings wrong with the memory, jim." );
     }
-    Hilfskonstrukt->C = ( mpfr_t* ) malloc( sizeof( mpfr_t ) * 2 );
-    if(NULL == Hilfskonstrukt->C)
+    PytagoMap->C = ( mpfr_t* ) malloc( sizeof( mpfr_t ) * 2 );
+    if(NULL == PytagoMap->C)
     {
         errorAndOut( "Somethings wrong with the memory, jim." );
     }
-    Hilfskonstrukt->D = ( mpfr_t* ) malloc( sizeof( mpfr_t ) * 2 );
-    if(NULL == Hilfskonstrukt->D)
+    PytagoMap->D = ( mpfr_t* ) malloc( sizeof( mpfr_t ) * 2 );
+    if(NULL == PytagoMap->D)
     {
         errorAndOut( "Somethings wrong with the memory, jim." );
     }
-    Hilfskonstrukt->E = ( mpfr_t* ) malloc( sizeof( mpfr_t ) * 2 );
-    if(NULL == Hilfskonstrukt->E)
+    PytagoMap->E = ( mpfr_t* ) malloc( sizeof( mpfr_t ) * 2 );
+    if(NULL == PytagoMap->E)
     {
         errorAndOut( "Somethings wrong with the memory, jim." );
     }
-    Hilfskonstrukt->Z = ( mpfr_t* ) malloc( sizeof( mpfr_t ) * 2 );
-    if(NULL == Hilfskonstrukt->Z)
+    PytagoMap->Z = ( mpfr_t* ) malloc( sizeof( mpfr_t ) * 2 );
+    if(NULL == PytagoMap->Z)
     {
         errorAndOut( "Somethings wrong with the memory, jim." );
     }
-    Hilfskonstrukt->Kantenlaenge = ( mpfr_t* ) malloc( sizeof( mpfr_t ) * 2 );
-    if(NULL == Hilfskonstrukt->Kantenlaenge)
+    PytagoMap->Kantenlaenge = ( mpfr_t* ) malloc( sizeof( mpfr_t ) * 2 );
+    if(NULL == PytagoMap->Kantenlaenge)
     {
         errorAndOut( "Somethings wrong with the memory, jim." );
     }
@@ -349,108 +350,118 @@ void makePlanimetik(
     }
 
     /* set Kantenlaenge */
-    mpfr_init_set_str( Hilfskonstrukt->Kantenlaenge[ 0 ], Length, BaseLength, Round );
+    mpfr_init_set_str( PytagoMap->Kantenlaenge[ 0 ], Length, BaseLength, Round );
     /* Kantenlaenge/2 */
-    mpfr_init( Hilfskonstrukt->Kantenlaenge[ 1 ] );
-    mpfr_div_ui( Hilfskonstrukt->Kantenlaenge[ 1 ], Hilfskonstrukt->Kantenlaenge[ 0 ], 2, Round );
+    mpfr_init( PytagoMap->Kantenlaenge[ 1 ] );
+    mpfr_div_ui( PytagoMap->Kantenlaenge[ 1 ], PytagoMap->Kantenlaenge[ 0 ], 2, Round );
 #ifdef DEBUG
     printf("\nKantenlänge is:");
-    mpfr_out_str ( stdout, 10, 0, Hilfskonstrukt->Kantenlaenge[ 0 ], Round );
+    mpfr_out_str ( stdout, 10, 0, PytagoMap->Kantenlaenge[ 0 ], Round );
+    printf("\nKantenlänge/2 is:");
+    mpfr_out_str ( stdout, 10, 0, PytagoMap->Kantenlaenge[ 1 ], Round );
     fflush( stdout );
 #endif
 
     /* set point A */
-    mpfr_init( Hilfskonstrukt->A[ 0 ] );
-    mpfr_set_str( Hilfskonstrukt->A[ 0 ], X, BaseX, Round );
-    mpfr_init( Hilfskonstrukt->A[ 1 ] );
-    mpfr_set_str( Hilfskonstrukt->A[ 1 ], Y, BaseX, Round );
+    mpfr_init( PytagoMap->A[ 0 ] );
+    mpfr_set_str( PytagoMap->A[ 0 ], X, BaseX, Round );
+    mpfr_init( PytagoMap->A[ 1 ] );
+    mpfr_set_str( PytagoMap->A[ 1 ], Y, BaseX, Round );
 #ifdef DEBUG
     printf("\nPoint A is: (");
-    mpfr_out_str ( stdout, 10, 0, Hilfskonstrukt->A[ 0 ], Round );
+    mpfr_out_str ( stdout, 10, 0, PytagoMap->A[ 0 ], Round );
     printf(", ");
-    mpfr_out_str ( stdout, 10, 0, Hilfskonstrukt->A[ 1 ], Round );
+    mpfr_out_str ( stdout, 10, 0, PytagoMap->A[ 1 ], Round );
     printf(")");
     fflush( stdout );
 #endif
-    mpfr_set_str( Hilfskonstrukt->A[ 1 ], Y, BaseY, Round );
-
-    /* set point B */
-    /* B = A_x+Kantenlaenge, A_y */
-    mpfr_init( Hilfskonstrukt->B[ 0 ] );
-    mpfr_add( Hilfskonstrukt->B[ 0 ], Hilfskonstrukt->Kantenlaenge[ 0 ], Hilfskonstrukt->A[ 0 ], Round );
-    mpfr_init( Hilfskonstrukt->B[ 1 ] );
-    mpfr_set( Hilfskonstrukt->B[ 1 ], Hilfskonstrukt->A[ 1 ], Round );
-#ifdef DEBUG
-    printf("\nPoint B is: (");
-    mpfr_out_str ( stdout, 10, 0, Hilfskonstrukt->B[ 0 ], Round );
-    printf(", ");
-    mpfr_out_str ( stdout, 10, 0, Hilfskonstrukt->B[ 1 ], Round );
-    printf(")");
-    fflush( stdout );
-#endif
+    mpfr_set_str( PytagoMap->A[ 1 ], Y, BaseY, Round );
 
     /* C = A_x, A_y-Kantenlaenge/2 */
-    mpfr_init( Hilfskonstrukt->C[ 0 ] );
-    mpfr_set( Hilfskonstrukt->C[ 0 ], Hilfskonstrukt->A[ 0 ], Round );
+    mpfr_init( PytagoMap->C[ 0 ] );
+    mpfr_set( PytagoMap->C[ 0 ], PytagoMap->A[ 0 ], Round );
 
-    mpfr_init( Hilfskonstrukt->C[ 1 ] );
+    mpfr_init( PytagoMap->C[ 1 ] );
     /*  A_x, A_y-Kantenlaenge/2 */
-    mpfr_sub( Hilfskonstrukt->C[ 1 ], Hilfskonstrukt->A[ 1 ], Hilfskonstrukt->Kantenlaenge[ 1 ], Round );
+    mpfr_sub( PytagoMap->C[ 1 ], PytagoMap->A[ 1 ], PytagoMap->Kantenlaenge[ 1 ], Round );
 
 #ifdef DEBUG
     printf("\nPoint C is: (");
-    mpfr_out_str ( stdout, 10, 0, Hilfskonstrukt->C[ 0 ], Round );
+    mpfr_out_str ( stdout, 10, 0, PytagoMap->C[ 0 ], Round );
     printf(", ");
-    mpfr_out_str ( stdout, 10, 0, Hilfskonstrukt->C[ 1 ], Round );
+    mpfr_out_str ( stdout, 10, 0, PytagoMap->C[ 1 ], Round );
     printf(")");
     fflush( stdout );
 #endif
 
-    /* D = B_x, B_y-Kantenlaenge/2 */
-    mpfr_init( Hilfskonstrukt->D[ 0 ] );
-    mpfr_set( Hilfskonstrukt->D[ 0 ], Hilfskonstrukt->B[ 0 ], Round );
+    /* E = A_x+Kantenlaenge/2, A_y */
+    mpfr_init( PytagoMap->E[ 0 ] );
+    mpfr_add( PytagoMap->E[ 0 ], PytagoMap->A[ 0 ], PytagoMap->Kantenlaenge[ 1 ], Round );
 
-    mpfr_init( Hilfskonstrukt->D[ 1 ] );
-    /*  A_x, A_y-Kantenlaenge/2 */
-    mpfr_sub( Hilfskonstrukt->D[ 1 ], Hilfskonstrukt->B[ 1 ], Hilfskonstrukt->Kantenlaenge[ 1 ], Round );
-
-#ifdef DEBUG
-    printf("\nPoint D is: (");
-    mpfr_out_str ( stdout, 10, 0, Hilfskonstrukt->D[ 0 ], Round );
-    printf(", ");
-    mpfr_out_str ( stdout, 10, 0, Hilfskonstrukt->D[ 1 ], Round );
-    printf(")");
-    fflush( stdout );
-#endif
-
-    /* E = A_x-Kantenlaenge/2, A_y */
-    mpfr_init( Hilfskonstrukt->E[ 0 ] );
-    mpfr_sub( Hilfskonstrukt->E[ 0 ], Hilfskonstrukt->A[ 0 ], Hilfskonstrukt->Kantenlaenge[ 1 ], Round );
-
-    mpfr_init( Hilfskonstrukt->E[ 1 ] );
-    mpfr_set( Hilfskonstrukt->E[ 1 ], Hilfskonstrukt->A[ 1 ], Round );
+    mpfr_init( PytagoMap->E[ 1 ] );
+    mpfr_set( PytagoMap->E[ 1 ], PytagoMap->A[ 1 ], Round );
 
 #ifdef DEBUG
     printf("\nPoint E is: (");
-    mpfr_out_str ( stdout, 10, 0, Hilfskonstrukt->E[ 0 ], Round );
+    mpfr_out_str ( stdout, 10, 0, PytagoMap->E[ 0 ], Round );
     printf(", ");
-    mpfr_out_str ( stdout, 10, 0, Hilfskonstrukt->E[ 1 ], Round );
+    mpfr_out_str ( stdout, 10, 0, PytagoMap->E[ 1 ], Round );
     printf(")");
     fflush( stdout );
 #endif
 
-    /* Z = C_x-Kantenlaenge/2, C_y */
-    mpfr_init( Hilfskonstrukt->Z[ 0 ] );
-    mpfr_sub( Hilfskonstrukt->Z[ 0 ], Hilfskonstrukt->C[ 0 ], Hilfskonstrukt->Kantenlaenge[ 1 ], Round );
+    /* Z = C_x+Kantenlaenge/2, C_y */
+    mpfr_init( PytagoMap->Z[ 0 ] );
+    mpfr_add( PytagoMap->Z[ 0 ], PytagoMap->C[ 0 ], PytagoMap->Kantenlaenge[ 1 ], Round );
 
-    mpfr_init( Hilfskonstrukt->Z[ 1 ] );
-    mpfr_set( Hilfskonstrukt->Z[ 1 ], Hilfskonstrukt->C[ 1 ], Round );
-
+    mpfr_init( PytagoMap->Z[ 1 ] );
+    mpfr_set( PytagoMap->Z[ 1 ], PytagoMap->C[ 1 ], Round );
 #ifdef DEBUG
     printf("\nPoint Z is: (");
-    mpfr_out_str ( stdout, 10, 0, Hilfskonstrukt->Z[ 0 ], Round );
+    mpfr_out_str ( stdout, 10, 0, PytagoMap->Z[ 0 ], Round );
     printf(", ");
-    mpfr_out_str ( stdout, 10, 0, Hilfskonstrukt->Z[ 1 ], Round );
+    mpfr_out_str ( stdout, 10, 0, PytagoMap->Z[ 1 ], Round );
+    printf(")");
+    fflush( stdout );
+#endif
+
+    /* set point B */
+    mpfr_init( PytagoMap->B[ 0 ] );
+    mpfr_init( PytagoMap->B[ 1 ] );
+#ifdef MIRROW
+    mirrowPointOnX( PytagoMap->B, PytagoMap->E[0], PytagoMap->A, Round );
+#else
+    /* B = A_x+Kantenlaenge, A_y */
+    mpfr_add( PytagoMap->B[ 0 ], PytagoMap->Kantenlaenge[ 0 ], PytagoMap->A[ 0 ], Round );
+    mpfr_set( PytagoMap->B[ 1 ], PytagoMap->A[ 1 ], Round );
+#endif
+#ifdef DEBUG
+    printf("\nPoint B is: (");
+    mpfr_out_str ( stdout, 10, 0, PytagoMap->B[ 0 ], Round );
+    printf(", ");
+    mpfr_out_str ( stdout, 10, 0, PytagoMap->B[ 1 ], Round );
+    printf(")");
+    fflush( stdout );
+#endif
+
+    /* Set D */
+    mpfr_init( PytagoMap->D[ 0 ] );
+    mpfr_init( PytagoMap->D[ 1 ] );
+#ifdef MIRROW
+    mpfr_init( PytagoMap->D[ 0 ] );
+    mpfr_init( PytagoMap->D[ 1 ] );
+    mirrowPointOnX( PytagoMap->D, PytagoMap->E[0], PytagoMap->C, Round );
+#else
+    /* D = B_x, B_y-Kantenlaenge/2 */
+    mpfr_set( PytagoMap->D[ 0 ], PytagoMap->B[ 0 ], Round );
+    /*  A_x, A_y-Kantenlaenge/2 */
+    mpfr_sub( PytagoMap->D[ 1 ], PytagoMap->B[ 1 ], PytagoMap->Kantenlaenge[ 1 ], Round );
+#endif
+#ifdef DEBUG
+    printf("\nPoint D is: (");
+    mpfr_out_str ( stdout, 10, 0, PytagoMap->D[ 0 ], Round );
+    printf(", ");
+    mpfr_out_str ( stdout, 10, 0, PytagoMap->D[ 1 ], Round );
     printf(")");
     fflush( stdout );
 #endif
@@ -476,26 +487,26 @@ void makeHZPointsPlatim()
     /* EZ -> 131 5/12 - 34 */
     mpfr_t Tmp, Tmp2;
 
-    Hilfskonstrukt->H = ( mpfr_t* ) malloc( sizeof( mpfr_t ) * 2 );
-    if( NULL == Hilfskonstrukt->H )
+    PytagoMap->H = ( mpfr_t* ) malloc( sizeof( mpfr_t ) * 2 );
+    if( NULL == PytagoMap->H )
     {
         errorAndOut( "Somethings wrong with the memory, jim." );
     }
 
-    Hilfskonstrukt->K = ( mpfr_t* ) malloc( sizeof( mpfr_t ) * 2 );
-    if( NULL == Hilfskonstrukt->K )
+    PytagoMap->K = ( mpfr_t* ) malloc( sizeof( mpfr_t ) * 2 );
+    if( NULL == PytagoMap->K )
     {
         errorAndOut( "Somethings wrong with the memory, jim." );
     }
 
-    Hilfskonstrukt->O = ( mpfr_t* ) malloc( sizeof( mpfr_t ) * 2 );
-    if( NULL == Hilfskonstrukt->O )
+    PytagoMap->O = ( mpfr_t* ) malloc( sizeof( mpfr_t ) * 2 );
+    if( NULL == PytagoMap->O )
     {
         errorAndOut( "Somethings wrong with the memory, jim." );
     }
 
-    Hilfskonstrukt->S = ( mpfr_t* ) malloc( sizeof( mpfr_t ) * 2 );
-    if( NULL == Hilfskonstrukt->S )
+    PytagoMap->S = ( mpfr_t* ) malloc( sizeof( mpfr_t ) * 2 );
+    if( NULL == PytagoMap->S )
     {
         errorAndOut( "Somethings wrong with the memory, jim." );
     }
@@ -508,100 +519,112 @@ void makeHZPointsPlatim()
     mpfr_init( Tmp );
     mpfr_set_ui( Tmp, 131, Round );
     mpfr_add( Tmp, Tmp, Tmp2, Round );
+    mpfr_set( Tmp2, Tmp, Round );
+
     mpfr_sub_ui( Tmp, Tmp, 34, Round );
     /* 1E =  (Kantenlänge/2)/(131 5/12 - 34) */
-    mpfr_init( Hilfskonstrukt->Einheit );
-    mpfr_div( Hilfskonstrukt->Einheit, Hilfskonstrukt->Kantenlaenge[ 1 ], Tmp, Round );
+    mpfr_init( PytagoMap->Einheit );
+    mpfr_div( PytagoMap->Einheit, PytagoMap->Kantenlaenge[ 1 ], Tmp, Round );
 #ifdef DEBUG
     printf("\nEine Einheit ist: ");
-    mpfr_out_str ( stdout, 10, 0, Hilfskonstrukt->Einheit, Round );
+    mpfr_out_str ( stdout, 10, 0, PytagoMap->Einheit, Round );
     fflush( stdout );
 #endif
+
+    /*Set HZ = 131 5/12E */
+    mpfr_init( PytagoMap->ZH );
+    mpfr_mul( PytagoMap->ZH, PytagoMap->Einheit, Tmp2, Round );
+#ifdef DEBUG
+    printf("\nZH ist: ");
+    mpfr_out_str ( stdout, 10, 0, PytagoMap->ZH, Round );
+    fflush( stdout );
+#endif
+
     /* EH = 34*Einheit */
-    mpfr_init( Hilfskonstrukt->EH );
-    mpfr_mul_ui( Hilfskonstrukt->EH, Hilfskonstrukt->Einheit, 34, Round );
+    mpfr_init( PytagoMap->EH );
+    mpfr_mul_ui( PytagoMap->EH, PytagoMap->Einheit, 34, Round );
 #ifdef DEBUG
     printf("\nEH ist: ");
-    mpfr_out_str ( stdout, 10, 0, Hilfskonstrukt->EH, Round );
+    mpfr_out_str ( stdout, 10, 0, PytagoMap->EH, Round );
     fflush( stdout );
 #endif
     /* H = E_x, E_y+EH */
-    mpfr_init( Hilfskonstrukt->H[ 0 ] );
-    mpfr_set( Hilfskonstrukt->H[ 0 ], Hilfskonstrukt->E[ 0 ], Round );
+    mpfr_init( PytagoMap->H[ 0 ] );
+    mpfr_set( PytagoMap->H[ 0 ], PytagoMap->E[ 0 ], Round );
 
-    mpfr_init( Hilfskonstrukt->H[ 1 ] );
-    mpfr_add( Hilfskonstrukt->H[ 1 ], Hilfskonstrukt->E[ 1 ], Hilfskonstrukt->EH, Round );
+    mpfr_init( PytagoMap->H[ 1 ] );
+    mpfr_add( PytagoMap->H[ 1 ], PytagoMap->E[ 1 ], PytagoMap->EH, Round );
 #ifdef DEBUG
     printf("\nPoint H is: (");
-    mpfr_out_str ( stdout, 10, 0, Hilfskonstrukt->H[ 0 ], Round );
+    mpfr_out_str ( stdout, 10, 0, PytagoMap->H[ 0 ], Round );
     printf(", ");
-    mpfr_out_str ( stdout, 10, 0, Hilfskonstrukt->H[ 1 ], Round );
+    mpfr_out_str ( stdout, 10, 0, PytagoMap->H[ 1 ], Round );
     printf(")");
     fflush( stdout );
 #endif
     /* KH = 79*Einheit */
-    mpfr_init( Hilfskonstrukt->KH );
-    mpfr_mul_ui( Hilfskonstrukt->KH, Hilfskonstrukt->Einheit, 79, Round );
+    mpfr_init( PytagoMap->KH );
+    mpfr_mul_ui( PytagoMap->KH, PytagoMap->Einheit, 79, Round );
 #ifdef DEBUG
     printf("\nPoint KH is: ");
-    mpfr_out_str ( stdout, 10, 0, Hilfskonstrukt->KH, Round );
+    mpfr_out_str ( stdout, 10, 0, PytagoMap->KH, Round );
     fflush( stdout );
 #endif
     /* K = H_x, H_y-KH */
-    mpfr_init( Hilfskonstrukt->K[ 0 ] );
-    mpfr_set( Hilfskonstrukt->K[ 0 ], Hilfskonstrukt->H[ 0 ], Round );
+    mpfr_init( PytagoMap->K[ 0 ] );
+    mpfr_set( PytagoMap->K[ 0 ], PytagoMap->H[ 0 ], Round );
 
-    mpfr_init( Hilfskonstrukt->K[ 1 ] );
-    mpfr_sub( Hilfskonstrukt->K[ 1 ], Hilfskonstrukt->H[ 1 ], Hilfskonstrukt->KH, Round );
+    mpfr_init( PytagoMap->K[ 1 ] );
+    mpfr_sub( PytagoMap->K[ 1 ], PytagoMap->H[ 1 ], PytagoMap->KH, Round );
 #ifdef DEBUG
     printf("\nPoint K is: (");
-    mpfr_out_str ( stdout, 10, 0, Hilfskonstrukt->K[ 0 ], Round );
+    mpfr_out_str ( stdout, 10, 0, PytagoMap->K[ 0 ], Round );
     printf(", ");
-    mpfr_out_str ( stdout, 10, 0, Hilfskonstrukt->K[ 1 ], Round );
+    mpfr_out_str ( stdout, 10, 0, PytagoMap->K[ 1 ], Round );
     printf(")");
     fflush( stdout );
 #endif
     /* OH = 52*Einheit siehe seite 121 */
-    mpfr_init( Hilfskonstrukt->OH );
-    mpfr_mul_ui( Hilfskonstrukt->OH, Hilfskonstrukt->Einheit, 52, Round );
+    mpfr_init( PytagoMap->OH );
+    mpfr_mul_ui( PytagoMap->OH, PytagoMap->Einheit, 52, Round );
 #ifdef DEBUG
     printf("\nPoint OH is: ");
-    mpfr_out_str ( stdout, 10, 0, Hilfskonstrukt->OH, Round );
+    mpfr_out_str ( stdout, 10, 0, PytagoMap->OH, Round );
     fflush( stdout );
 #endif
     /* O = H_x, H_y-OH */
-    mpfr_init( Hilfskonstrukt->O[ 0 ] );
-    mpfr_set( Hilfskonstrukt->O[ 0 ], Hilfskonstrukt->H[ 0 ], Round );
+    mpfr_init( PytagoMap->O[ 0 ] );
+    mpfr_set( PytagoMap->O[ 0 ], PytagoMap->H[ 0 ], Round );
 
-    mpfr_init( Hilfskonstrukt->O[ 1 ] );
-    mpfr_sub( Hilfskonstrukt->O[ 1 ], Hilfskonstrukt->H[ 1 ], Hilfskonstrukt->OH, Round );
+    mpfr_init( PytagoMap->O[ 1 ] );
+    mpfr_sub( PytagoMap->O[ 1 ], PytagoMap->H[ 1 ], PytagoMap->OH, Round );
 #ifdef DEBUG
-    printf("\nPoint K is: (");
-    mpfr_out_str ( stdout, 10, 0, Hilfskonstrukt->O[ 0 ], Round );
+    printf("\nPoint O is: (");
+    mpfr_out_str ( stdout, 10, 0, PytagoMap->O[ 0 ], Round );
     printf(", ");
-    mpfr_out_str ( stdout, 10, 0, Hilfskonstrukt->O[ 1 ], Round );
+    mpfr_out_str ( stdout, 10, 0, PytagoMap->O[ 1 ], Round );
     printf(")");
     fflush( stdout );
 #endif
     /* SH = 115*Einheit siehe seite 121 */
-    mpfr_init( Hilfskonstrukt->SH );
-    mpfr_mul_ui( Hilfskonstrukt->SH, Hilfskonstrukt->Einheit, 115, Round );
+    mpfr_init( PytagoMap->SH );
+    mpfr_mul_ui( PytagoMap->SH, PytagoMap->Einheit, 115, Round );
 #ifdef DEBUG
     printf("\nPoint SH is: ");
-    mpfr_out_str ( stdout, 10, 0, Hilfskonstrukt->SH, Round );
+    mpfr_out_str ( stdout, 10, 0, PytagoMap->SH, Round );
     fflush( stdout );
 #endif
     /* S = H_x, H_y-SH */
-    mpfr_init( Hilfskonstrukt->S[ 0 ] );
-    mpfr_set( Hilfskonstrukt->S[ 0 ], Hilfskonstrukt->H[ 0 ], Round );
+    mpfr_init( PytagoMap->S[ 0 ] );
+    mpfr_set( PytagoMap->S[ 0 ], PytagoMap->H[ 0 ], Round );
 
-    mpfr_init( Hilfskonstrukt->S[ 1 ] );
-    mpfr_sub( Hilfskonstrukt->S[ 1 ], Hilfskonstrukt->H[ 1 ], Hilfskonstrukt->SH, Round );
+    mpfr_init( PytagoMap->S[ 1 ] );
+    mpfr_sub( PytagoMap->S[ 1 ], PytagoMap->H[ 1 ], PytagoMap->SH, Round );
 #ifdef DEBUG
     printf("\nPoint S is: (");
-    mpfr_out_str ( stdout, 10, 0, Hilfskonstrukt->S[ 0 ], Round );
+    mpfr_out_str ( stdout, 10, 0, PytagoMap->S[ 0 ], Round );
     printf(", ");
-    mpfr_out_str ( stdout, 10, 0, Hilfskonstrukt->S[ 1 ], Round );
+    mpfr_out_str ( stdout, 10, 0, PytagoMap->S[ 1 ], Round );
     printf(")");
     fflush( stdout );
 #endif
@@ -613,21 +636,161 @@ void makeHZPointsPlatim()
 void makeLimitsPlatim()
 {
     mpfr_t Diameter, Radians, Degree;
+    mpfr_t* Tmp;
+    int Counter;
 
     mpfr_init( Diameter );
+    mpfr_init( Degree );
     mpfr_init( Radians );
-    mpfr_mul_si( Diameter, Hilfskonstrukt->KH, 2, Round );
-    mpfr_mul_si( Radians, Hilfskonstrukt->Einheit, 4, Round );
-    mpfr_mul_si( Radians, Radians, 18, Round );
-    /* 18 mal : see 119 */
-    getDegreeOnCircle( Degree, Radians, Diameter, Round );
 
-    mpfr_mul_si( Radians, Hilfskonstrukt->Einheit, 4, Round );
-    mpfr_mul_si( Radians, Radians, -18, Round );
+    PytagoMap->G = ( mpfr_t* ) malloc( sizeof( mpfr_t ) * 2 );
+    if( NULL == PytagoMap->G )
+    {
+        errorAndOut( "Somethings wrong with the memory, jim." );
+    }
+    PytagoMap->X = ( mpfr_t* ) malloc( sizeof( mpfr_t ) * 2 );
+    if( NULL == PytagoMap->X )
+    {
+        errorAndOut( "Somethings wrong with the memory, jim." );
+    }
+    PytagoMap->M = ( mpfr_t* ) malloc( sizeof( mpfr_t ) * 2 );
+    if( NULL == PytagoMap->M )
+    {
+        errorAndOut( "Somethings wrong with the memory, jim." );
+    }
+    PytagoMap->R = ( mpfr_t* ) malloc( sizeof( mpfr_t ) * 2 );
+    if( NULL == PytagoMap->R )
+    {
+        errorAndOut( "Somethings wrong with the memory, jim." );
+    }
+
+
+    PytagoMap->L = ( mpfr_t* ) malloc( sizeof( mpfr_t ) * 2 );
+    if( NULL == PytagoMap->L )
+    {
+        errorAndOut( "Somethings wrong with the memory, jim." );
+    }
+
+    PytagoMap->P = ( mpfr_t* ) malloc( sizeof( mpfr_t ) * 2 );
+    if( NULL == PytagoMap->P )
+    {
+        errorAndOut( "Somethings wrong with the memory, jim." );
+    }
+
+    Tmp = ( mpfr_t* ) malloc( sizeof( mpfr_t ) * 4 );
+    if( NULL == Tmp )
+    {
+        errorAndOut( "Somethings wrong with the memory, jim." );
+    }
+
+    mpfr_init( PytagoMap->G[ 0 ] );
+    mpfr_init( PytagoMap->G[ 1 ] );
+    mpfr_init( PytagoMap->X[ 0 ] );
+    mpfr_init( PytagoMap->X[ 1 ] );
+    mpfr_init( PytagoMap->M[ 0 ] );
+    mpfr_init( PytagoMap->M[ 1 ] );
+    mpfr_init( PytagoMap->R[ 0 ] );
+    mpfr_init( PytagoMap->R[ 1 ] );
+
+
+    mpfr_init( PytagoMap->L[ 0 ] );
+    mpfr_init( PytagoMap->L[ 1 ] );
+    mpfr_init( PytagoMap->P[ 0 ] );
+    mpfr_init( PytagoMap->P[ 1 ] );
+
+    mpfr_init( Tmp[ 0 ] );
+    mpfr_init( Tmp[ 1 ] );
+    mpfr_init( Tmp[ 2 ] );
+    mpfr_init( Tmp[ 3 ] );
+
+    mpfr_mul_si( Diameter, PytagoMap->KH, 2, Round );
+    for( Counter = 1; Counter <= 18; Counter++ )
+    {
+        /* 18 mal : see 119 */
+        mpfr_mul_si(Radians, PytagoMap->Einheit, 4, Round);
+        mpfr_mul_si(Radians, Radians, -Counter, Round);
+
+        getDegreeOnCircle(Degree, Radians, Diameter, Round);
+        mpfr_add_si(Degree, Degree, 180, Round);
+#ifdef DEBUG
+        printf("\nCalculated %i degree of LKG is: ", Counter);
+        mpfr_out_str ( stdout, 10, 0, Degree, Round );
+        fflush( stdout );
+#endif
+        rotatePoint( PytagoMap->G, PytagoMap->K, PytagoMap->H, Degree, Round );
+#ifdef DEBUG
+        printf("\nCalculated %i G is: (", Counter );
+        mpfr_out_str ( stdout, 10, 0, PytagoMap->G[ 0 ], Round );
+        printf(", ");
+        mpfr_out_str ( stdout, 10, 0, PytagoMap->G[ 1 ], Round );
+        printf(")");
+        fflush( stdout );
+#endif
+    }
+
+    rotatePoint( PytagoMap->M, PytagoMap->Z, PytagoMap->H, Degree, Round );
+#ifdef DEBUG
+    printf("\nCalculated M is: (");
+    mpfr_out_str ( stdout, 10, 0, PytagoMap->M[ 0 ], Round );
+    printf(", ");
+    mpfr_out_str ( stdout, 10, 0, PytagoMap->M[ 1 ], Round );
+    printf(")");
+    fflush( stdout );
+#endif
+
+    /* Gerade von HG Verlängern */
+    mpfr_mul_si( Tmp[ 0 ], Degree, 1000, Round );
+    mpfr_add( Tmp[ 0 ], Tmp[ 0 ], PytagoMap->G[ 0 ], Round );
+
+    mpfr_mul_si( Tmp[ 1 ], Degree, -1000, Round );
+    mpfr_add( Tmp[ 1 ], Tmp[ 1 ], PytagoMap->G[ 1 ], Round );
+#ifdef DEBUG
+    printf("\nCalculated G' is: (");
+    mpfr_out_str ( stdout, 10, 0, Tmp[ 0 ], Round );
+    printf(", ");
+    mpfr_out_str ( stdout, 10, 0, Tmp[ 1 ], Round );
+    printf(")");
+    fflush( stdout );
+#endif
+
+    intersectCircleLine( Tmp, PytagoMap->H, Tmp, PytagoMap->H, PytagoMap->ZH, Round );
+#ifdef DEBUG
+    printf("\nCalculated M is: (");
+    mpfr_out_str ( stdout, 10, 0, Tmp[ 0 ], Round );
+    printf(", ");
+    mpfr_out_str ( stdout, 10, 0, Tmp[ 1 ], Round );
+    printf(")");
+    fflush( stdout );
+#endif
+
+    /* Set L */
+    mpfr_mul_si( Radians, PytagoMap->Einheit, 4, Round );
+    mpfr_mul_si( Degree, Degree, -1, Round );
+    mpfr_add_si( Degree, Degree, 0, Round );
+#ifdef DEBUG
+    printf("\nCalculated degree of G is: ");
+    mpfr_out_str ( stdout, 10, 0, Degree, Round );
+    fflush( stdout );
+#endif
+    rotatePoint( PytagoMap->L, PytagoMap->K, PytagoMap->H, Degree, Round );
+#ifdef DEBUG
+    printf("\nCalculated L is: (");
+    mpfr_out_str ( stdout, 10, 0, PytagoMap->L[ 0 ], Round );
+    printf(", ");
+    mpfr_out_str ( stdout, 10, 0, PytagoMap->L[ 1 ], Round );
+    printf(")");
+    fflush( stdout );
+#endif
+    /* Housekeeping */
     mpfr_clear( Diameter );
     mpfr_clear( Radians );
+    mpfr_clear( Degree );
+    mpfr_clear( Tmp[ 0 ] );
+    mpfr_clear( Tmp[ 1 ] );
+    mpfr_clear( Tmp[ 2 ] );
+    mpfr_clear( Tmp[ 3 ] );
     mpfr_free_cache ();
-
+    free( Tmp );
 }
 
 int main( int ArgCount, char* ArgVar[] )
@@ -657,6 +820,11 @@ int main( int ArgCount, char* ArgVar[] )
     fflush( stdout );
 #endif
     makeHZPointsPlatim();
+#ifdef DEBUG
+    printf("\nSet Limits.");
+    fflush( stdout );
+#endif
+    makeLimitsPlatim();
 #ifdef DEBUG
     printf("\n");
     fflush( stdout );

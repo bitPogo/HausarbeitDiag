@@ -962,6 +962,36 @@ extern void getDegreeOnCircle( mpfr_t Return, mpfr_t Radians, mpfr_t Diameter, m
     mpfr_free_cache ();
 }
 /**
+ * Caculate the grade by given radians and
+ * @param Return | mpfr_t | the computed radians
+ * @param Degree | mpfr_t | the given degree
+ * @param Diameter | mpfr_t | the given diameter
+ * @param Round | mpfr_rnd_t | which rounding to use
+ */
+extern void getRadiansOnCircle( mpfr_t Return, mpfr_t Degree, mpfr_t Diameter, mpfr_rnd_t Round )
+{
+    //mpfr_const_pi
+    /* b = alpha/360°⋅pi⋅d */
+    mpfr_t Tmp;
+
+    mpfr_init( Tmp );
+
+    if( FALSE == PiIsInit )
+    {
+        mpfr_init( Pi );
+        mpfr_const_pi( Pi, Round );
+        PiIsInit = TRUE;
+    }
+    /* alpha/360° */
+    mpfr_div_ui( Tmp, Degree, 360, Round );
+    /* (alpha/360°*pi) */
+    mpfr_mul( Tmp, Tmp, Pi, Round );
+    /* (b*360°*pi)*d */
+    mpfr_mul( Return, Tmp, Diameter, Round );
+    mpfr_clear( Tmp );
+    mpfr_free_cache ();
+}
+/**
  * Converts degrees to rad
  * @param Return | mpfr_t | the computed radians
  * @param Degree | mpfr_t | the given degrees

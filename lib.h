@@ -139,6 +139,14 @@ extern unsigned short isDigit( char Char, unsigned  short IsHex );
  */
 extern void getDegreeOnCircle( mpfr_t Return, mpfr_t Radians, mpfr_t Diameter, mpfr_rnd_t Round );
 /**
+ * Caculate the grade by given radians and
+ * @param Return | mpfr_t | the computed radians
+ * @param Degree | mpfr_t | the given degree
+ * @param Diameter | mpfr_t | the given diameter
+ * @param Round | mpfr_rnd_t | which rounding to use
+ */
+        extern void getRadiansOnCircle( mpfr_t Return, mpfr_t Degree, mpfr_t Diameter, mpfr_rnd_t Round );
+/**
  * Converts degrees to rad
  * @param Return | mpfr_t | the computed radians
  * @param Degree | mpfr_t | the given degrees

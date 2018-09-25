@@ -14,152 +14,6 @@
 #ifndef TRUE
 #define TRUE 1
 #endif
-
-#ifdef LIBTEST
-    int main()
-    {
-        mpfr_t a, b;
-        mpfr_t* Intersection;
-        mpfr_t* ACenter;
-        mpfr_t* BCenter;
-        mpfr_t* CCenter;
-        mpfr_t* DCenter;
-
-        mpfr_set_default_prec ( 200 );
-        Intersection = malloc( sizeof(mpfr_t) * 4);
-        ACenter = malloc( sizeof(mpfr_t) * 2);
-        BCenter = malloc( sizeof(mpfr_t) * 2);
-
-        mpfr_init_set_si( ACenter[ 0 ], 10, MPFR_RNDD );
-        mpfr_init_set_si( ACenter[ 1 ], 10, MPFR_RNDD );
-        mpfr_init_set_si( BCenter[ 0 ], 11, MPFR_RNDD );
-        mpfr_init_set_si( BCenter[ 1 ], 10, MPFR_RNDD );
-
-        mpfr_init( Intersection[ 0 ] );
-        mpfr_init( Intersection[ 1 ] );
-        mpfr_init( Intersection[ 2 ] );
-        mpfr_init( Intersection[ 3 ] );
-        mpfr_set_nan( Intersection[ 0 ] );
-        mpfr_set_nan( Intersection[ 1 ] );
-        mpfr_set_nan( Intersection[ 2 ] );
-        mpfr_set_nan( Intersection[ 3 ] );
-
-        mpfr_init_set_ui( a, 10, MPFR_RNDD );
-        mpfr_init_set_ui( b, 10, MPFR_RNDD );
-
-        intersectCircles(
-                Intersection,
-                ACenter,
-                BCenter,
-                a,
-                b,
-                MPFR_RNDD
-        );
-        printf("\n");
-
-        mpfr_clear( Intersection[ 0 ] );
-        mpfr_clear( Intersection[ 1 ] );
-        mpfr_clear( Intersection[ 2 ] );
-        mpfr_clear( Intersection[ 3 ] );
-        mpfr_clear( ACenter[ 0 ] );
-        mpfr_clear( ACenter[ 1 ] );
-        mpfr_clear( BCenter[ 0 ] );
-        mpfr_clear( BCenter[ 1 ] );
-        mpfr_clear( a );
-        mpfr_free_cache ();
-        free( Intersection );
-        free( ACenter );
-        free( BCenter );
-
-        Intersection = malloc( sizeof(mpfr_t) * 4);
-        ACenter = malloc( sizeof(mpfr_t) * 2);
-        BCenter = malloc( sizeof(mpfr_t) * 2);
-        CCenter = malloc( sizeof(mpfr_t) * 2);
-
-        mpfr_init( Intersection[ 0 ] );
-        mpfr_init( Intersection[ 1 ] );
-        mpfr_init( Intersection[ 2 ] );
-        mpfr_init( Intersection[ 3 ] );
-        mpfr_set_nan( Intersection[ 0 ] );
-        mpfr_set_nan( Intersection[ 1 ] );
-        mpfr_set_nan( Intersection[ 2 ] );
-        mpfr_set_nan( Intersection[ 3 ] );
-
-        mpfr_init_set_si( ACenter[ 0 ], -3, MPFR_RNDD );
-        mpfr_init_set_si( ACenter[ 1 ], -3, MPFR_RNDD );
-        mpfr_init_set_si( BCenter[ 0 ], -3, MPFR_RNDD );
-        mpfr_init_set_si( BCenter[ 1 ], 3, MPFR_RNDD );
-        mpfr_init_set_si( CCenter[ 0 ], 0, MPFR_RNDD );
-        mpfr_init_set_si( CCenter[ 1 ], 0, MPFR_RNDD );
-        mpfr_init_set_ui( a, 5, MPFR_RNDD );
-
-        intersectCircleLine(
-                Intersection,
-                ACenter,
-                BCenter,
-                CCenter,
-                a,
-                MPFR_RNDD
-        );
-
-        printf("\n");
-        DCenter = malloc( sizeof(mpfr_t) * 2);
-        mpfr_set_nan( Intersection[ 0 ] );
-        mpfr_set_nan( Intersection[ 1 ] );
-        mpfr_set_nan( Intersection[ 2 ] );
-        mpfr_set_nan( Intersection[ 3 ] );
-        mpfr_set_si( ACenter[ 0 ], 0, MPFR_RNDD );
-        mpfr_set_si( ACenter[ 1 ], 0, MPFR_RNDD );
-        mpfr_set_si( BCenter[ 0 ], 10, MPFR_RNDD );
-        mpfr_set_si( BCenter[ 1 ], 10, MPFR_RNDD );
-        mpfr_set_si( CCenter[ 0 ], 0, MPFR_RNDD );
-        mpfr_set_si( CCenter[ 1 ], 10, MPFR_RNDD );
-        mpfr_init_set_si( DCenter[ 0 ], 10, MPFR_RNDD );
-        mpfr_init_set_si( DCenter[ 1 ], 0, MPFR_RNDD );
-        intersectLines(
-                Intersection,
-                ACenter,
-                BCenter,
-                CCenter,
-                DCenter,
-                MPFR_RNDD
-        );
-        printf("\n");
-    #ifdef DEBUG
-        printf( "\nX is:" );
-        mpfr_out_str ( stdout, 10, 0, BCenter[ 0 ], MPFR_RNDD );
-        printf( "\nY is:" );
-        mpfr_out_str ( stdout, 10, 0, BCenter[ 1 ], MPFR_RNDD );
-    #endif
-        printf("\n");
-        mirrowPointOnX( Intersection, BCenter, MPFR_RNDD );
-    #ifdef DEBUG
-        printf( "\nX is:" );
-        mpfr_out_str ( stdout, 10, 0, Intersection[ 0 ], MPFR_RNDD );
-        printf( "\nY is:" );
-        mpfr_out_str ( stdout, 10, 0, Intersection[ 1 ], MPFR_RNDD );
-    #endif
-        printf("\n");
-        mirrowPointOnY( Intersection, Intersection, MPFR_RNDD );
-    #ifdef DEBUG
-        printf( "\nX is:" );
-        mpfr_out_str ( stdout, 10, 0, Intersection[ 0 ], MPFR_RNDD );
-        printf( "\nY is:" );
-        mpfr_out_str ( stdout, 10, 0, Intersection[ 1 ], MPFR_RNDD );
-    #endif
-        printf("\n");
-        mirrowPoint( Intersection, Intersection, MPFR_RNDD );
-    #ifdef DEBUG
-        printf( "\nX is:" );
-        mpfr_out_str ( stdout, 10, 0, Intersection[ 0 ], MPFR_RNDD );
-
-        printf( "\nY is:" );
-        mpfr_out_str ( stdout, 10, 0, Intersection[ 1 ], MPFR_RNDD );
-    #endif
-        printf("\n");
-        return 0;
-    }
-#endif
 typedef struct Planimetik
 {
     /* Parallelogramm Punkte */
@@ -188,10 +42,12 @@ typedef struct Planimetik
     mpfr_t* G;
     mpfr_t* R;
     mpfr_t* M;
+    mpfr_t* F;
     mpfr_t* P;
     mpfr_t* L;
     mpfr_t* T;
     mpfr_t* N;
+    mpfr_t* U;
 } Planimetik;
 
 /*-------------------Vars----------------------*/
@@ -199,6 +55,7 @@ typedef struct Planimetik
 mpfr_rnd_t Round;
 Planimetik* PytagoMap;
 char ErrorBuffer[256];
+unsigned short Mirrowing;
 
 /*-------------------Functions-----------------*/
 void setPrecusion( const char* PrecusionString )
@@ -262,6 +119,19 @@ void setRound( const char* RoundString )
     else
     {
         Round = MPFR_RNDZ;
+    }
+}
+
+void setMirrowing( const char* MirrowString )
+{
+    char *EndPointer;
+
+    printf("%s\n", MirrowString);
+    Mirrowing = strtol(MirrowString, &EndPointer, 10);
+    if ('\0' != *EndPointer )
+    {
+        snprintf(ErrorBuffer, 255, "Der übergebene Rundings-Parameter '%s' is fehlerhaft.", MirrowString);
+        errorAndOut(ErrorBuffer);
     }
 }
 
@@ -428,13 +298,16 @@ void makePlanimetik(
     /* set point B */
     mpfr_init( PytagoMap->B[ 0 ] );
     mpfr_init( PytagoMap->B[ 1 ] );
-#ifdef MIRROW
-    mirrowPointOnX( PytagoMap->B, PytagoMap->E[0], PytagoMap->A, Round );
-#else
-    /* B = A_x+Kantenlaenge, A_y */
-    mpfr_add( PytagoMap->B[ 0 ], PytagoMap->Kantenlaenge[ 0 ], PytagoMap->A[ 0 ], Round );
-    mpfr_set( PytagoMap->B[ 1 ], PytagoMap->A[ 1 ], Round );
-#endif
+    if( 1 == Mirrowing )
+    {
+        mirrowPointOnX(PytagoMap->B, PytagoMap->E[0], PytagoMap->A, Round);
+    }
+    else
+    {
+        /* B = A_x+Kantenlaenge, A_y */
+        mpfr_add(PytagoMap->B[0], PytagoMap->Kantenlaenge[0], PytagoMap->A[0], Round);
+        mpfr_set(PytagoMap->B[1], PytagoMap->A[1], Round);
+    }
 #ifdef DEBUG
     printf("\nPoint B is: (");
     mpfr_out_str ( stdout, 10, 0, PytagoMap->B[ 0 ], Round );
@@ -447,16 +320,19 @@ void makePlanimetik(
     /* Set D */
     mpfr_init( PytagoMap->D[ 0 ] );
     mpfr_init( PytagoMap->D[ 1 ] );
-#ifdef MIRROW
-    mpfr_init( PytagoMap->D[ 0 ] );
-    mpfr_init( PytagoMap->D[ 1 ] );
-    mirrowPointOnX( PytagoMap->D, PytagoMap->E[0], PytagoMap->C, Round );
-#else
-    /* D = B_x, B_y-Kantenlaenge/2 */
-    mpfr_set( PytagoMap->D[ 0 ], PytagoMap->B[ 0 ], Round );
-    /*  A_x, A_y-Kantenlaenge/2 */
-    mpfr_sub( PytagoMap->D[ 1 ], PytagoMap->B[ 1 ], PytagoMap->Kantenlaenge[ 1 ], Round );
-#endif
+    if( 1 == Mirrowing )
+    {
+        mpfr_init(PytagoMap->D[0]);
+        mpfr_init(PytagoMap->D[1]);
+        mirrowPointOnX(PytagoMap->D, PytagoMap->E[0], PytagoMap->C, Round);
+    }
+    else
+    {
+        /* D = B_x, B_y-Kantenlaenge/2 */
+        mpfr_set(PytagoMap->D[0], PytagoMap->B[0], Round);
+        /*  A_x, A_y-Kantenlaenge/2 */
+        mpfr_sub(PytagoMap->D[1], PytagoMap->B[1], PytagoMap->Kantenlaenge[1], Round);
+    }
 #ifdef DEBUG
     printf("\nPoint D is: (");
     mpfr_out_str ( stdout, 10, 0, PytagoMap->D[ 0 ], Round );
@@ -662,6 +538,11 @@ void makeLimitsPlatim()
     {
         errorAndOut( "Somethings wrong with the memory, jim." );
     }
+    PytagoMap->F = ( mpfr_t* ) malloc( sizeof( mpfr_t ) * 2 );
+    if( NULL == PytagoMap->F )
+    {
+        errorAndOut( "Somethings wrong with the memory, jim." );
+    }
 
 
     PytagoMap->L = ( mpfr_t* ) malloc( sizeof( mpfr_t ) * 2 );
@@ -690,6 +571,8 @@ void makeLimitsPlatim()
     mpfr_init( PytagoMap->M[ 1 ] );
     mpfr_init( PytagoMap->R[ 0 ] );
     mpfr_init( PytagoMap->R[ 1 ] );
+    mpfr_init( PytagoMap->F[ 0 ] );
+    mpfr_init( PytagoMap->F[ 1 ] );
 
 
     mpfr_init( PytagoMap->L[ 0 ] );
@@ -723,7 +606,8 @@ void makeLimitsPlatim()
     printf(")");
     fflush( stdout );
 #endif
-/* Gerade von HG Verlängern */
+#ifdef DEBUG
+    /* Gerade von HG Verlängern */
     mpfr_sub( Tmp[ 0 ], PytagoMap->G[ 0 ], PytagoMap->H[ 0 ], Round );
     mpfr_sub( Tmp[ 1 ], PytagoMap->G[ 1 ], PytagoMap->H[ 1 ], Round );
     getEinheitsVector( Tmp, Tmp, Round );
@@ -731,7 +615,7 @@ void makeLimitsPlatim()
     mpfr_mul_ui( Tmp[ 1 ], Tmp[ 1 ], 10, Round );
     mpfr_add( Tmp[ 0 ], Tmp[ 0 ], PytagoMap->H[ 0 ], Round );
     mpfr_add( Tmp[ 1 ], Tmp[ 1 ], PytagoMap->H[ 1 ], Round );
-#ifdef DEBUG
+
     printf("\nCalculated G' is: (");
     mpfr_out_str ( stdout, 10, 0, Tmp[ 0 ], Round );
     printf(", ");
@@ -750,22 +634,6 @@ void makeLimitsPlatim()
     fflush( stdout );
 #endif
 
-/*
-    intersectCircleLine( Tmp, PytagoMap->H, Tmp, PytagoMap->H, PytagoMap->ZH, Round );
-#ifdef DEBUG
-    printf("\nCalculated M_1 is: (");
-    mpfr_out_str ( stdout, 10, 0, Tmp[ 0 ], Round );
-    printf(", ");
-    mpfr_out_str ( stdout, 10, 0, Tmp[ 1 ], Round );
-    printf(")");
-    printf("\nCalculated M_2 is: (");
-    mpfr_out_str ( stdout, 10, 0, Tmp[ 2 ], Round );
-    printf(", ");
-    mpfr_out_str ( stdout, 10, 0, Tmp[ 3 ], Round );
-    printf(")");
-    fflush( stdout );
-#endif
-*/
     /* Set X */
     rotatePoint( PytagoMap->X, PytagoMap->O, PytagoMap->H, Degree, Round );
 #ifdef DEBUG
@@ -788,16 +656,39 @@ void makeLimitsPlatim()
     fflush( stdout );
 #endif
 
+    /* Set F */
+    /* Abstand im Intervall beim Äquator */
+    getRadiansOnCircle( Radians, Degree, Diameter, Round );
 
-    /* Set L */
-    mpfr_mul_si( Radians, PytagoMap->Einheit, 4, Round );
-    mpfr_mul_si( Degree, Degree, -1, Round );
-    mpfr_add_si( Degree, Degree, 0, Round );
+    /* 18 mal : see 119 */
+    mpfr_mul_si(Radians, Radians, 18, Round);
+
+    getDegreeOnCircle(Degree, Radians, Diameter, Round);
+    mpfr_set_ui( Tmp[ 0 ], 180 , Round );
+    mpfr_sub( Degree, Degree, Tmp[ 0 ] , Round );
+    //mpfr_mul_si( Degree, Degree, -1, Round );
 #ifdef DEBUG
-    printf("\nCalculated degree of G is: ");
+    printf("\nCalculated degree of MY/ZN is: ");
     mpfr_out_str ( stdout, 10, 0, Degree, Round );
     fflush( stdout );
 #endif
+    rotatePoint( PytagoMap->F, PytagoMap->Z, PytagoMap->H, Degree, Round );
+    //mirrowPointOnY( PytagoMap->F, PytagoMap->H[ 1 ], PytagoMap-> F, Round );
+#ifdef DEBUG
+    printf("\nCalculated F is: (");
+    mpfr_out_str ( stdout, 10, 0, PytagoMap->F[ 0 ], Round );
+    printf(", ");
+    mpfr_out_str ( stdout, 10, 0, PytagoMap->F[ 1 ], Round );
+    printf(")");
+    fflush( stdout );
+#endif
+
+    /* Set L */
+    /*
+
+    mpfr_mul_si( Radians, PytagoMap->Einheit, 4, Round );
+    mpfr_mul_si( Degree, Degree, -1, Round );
+    mpfr_add_si( Degree, Degree, 0, Round );
     rotatePoint( PytagoMap->L, PytagoMap->K, PytagoMap->H, Degree, Round );
 #ifdef DEBUG
     printf("\nCalculated L is: (");
@@ -806,7 +697,7 @@ void makeLimitsPlatim()
     mpfr_out_str ( stdout, 10, 0, PytagoMap->L[ 1 ], Round );
     printf(")");
     fflush( stdout );
-#endif
+#endif*/
     /* Housekeeping */
     mpfr_clear( Diameter );
     mpfr_clear( Radians );
@@ -827,20 +718,25 @@ int main( int ArgCount, char* ArgVar[] )
         errorAndOut( ErrorBuffer );
     }*/
 #ifdef DEBUG
-    printf("\nSet precusion.");
+    printf("\nSet mirrowing to ");
     fflush( stdout );
 #endif
-    setPrecusion( ArgVar[ 1 ] );
+    setMirrowing( ArgVar[ 1 ] );
 #ifdef DEBUG
-    printf("\nSet round.");
+    printf("\nSet precusion to ");
     fflush( stdout );
 #endif
-    setRound( ArgVar[ 2 ] );
+    setPrecusion( ArgVar[ 2 ] );
+#ifdef DEBUG
+    printf("\nSet round to ");
+    fflush( stdout );
+#endif
+    setRound( ArgVar[ 3 ] );
 #ifdef DEBUG
     printf("\nSet parallelogramm.");
     fflush( stdout );
 #endif
-    makePlanimetik( ArgVar[ 3 ], ArgVar[ 4 ], ArgVar[ 5 ] );
+    makePlanimetik( ArgVar[ 4 ], ArgVar[ 5 ], ArgVar[ 6 ] );
 #ifdef DEBUG
     printf("\nSet HZ Punkte.");
     fflush( stdout );

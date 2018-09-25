@@ -133,6 +133,20 @@ mpfr_t* setPointByAddOnX( mpfr_t* OldPoint, mpfr_t Distance );
  * @param Flag | int | MIRROW_BOTH for mirrow it on both axis, MIRROW_X for mirrow it on x-axis and MIRROW_Y for mirrow it on y-axis
  */
 mpfr_t* setPointAndMirrow( mpfr_t* OldPoint, mpfr_t* MirrowPoint, int Flag );
+/**
+ * inits a mpfr_t structure by mulitplying something with somthing
+ * @param Target | mpfr_t | target structure
+ * @param Mul1 | mpfr_t | Factor 1
+ * @param Mul2 | mpfr_t | Factor 2
+ */
+void initAndMultiply( mpfr_t Target, mpfr_t Mul1, mpfr_t Mul2 );
+/**
+ * inits a mpfr_t structure by mulitplying something with somthing
+ * @param Target | mpfr_t | target structure
+ * @param Mul1 | mpfr_t | Factor 1
+ * @param Mul2 | unsigned int | Factor 2
+ */
+void initAndMultiplyUi( mpfr_t Something, mpfr_t Mul1, unsigned int Mul2 );
 /*-------------------Function Declare Platim -----------------*/
 /**
  * Computes addtional Points ( like H ) the distances on HZ
@@ -147,7 +161,7 @@ void makeLimitsPlatim();
  * Computes addtional Points ( like L ) the distances on LZ
  */
 void makeLZPointsGlob();
-/*-------------------Functions-----------------*/
+/*-------------------Subroutines-----------------*/
 mpfr_t* setPointBySubOnY( mpfr_t* OldPoint, mpfr_t Distance )
 {
     mpfr_t* NewPoint;
@@ -244,6 +258,20 @@ mpfr_t* setPointAndMirrow( mpfr_t* OldPoint, mpfr_t* MirrowPoint, int Flag )
 
     return NewPoint;
 }
+
+void initAndMultiply( mpfr_t Something, mpfr_t Mul1, mpfr_t Mul2 )
+{
+    mpfr_init( Something );
+    mpfr_mul( Something, Mul1, Mul2, Round );
+}
+
+void initAndMultiplyUi( mpfr_t Something, mpfr_t Mul1, unsigned int Mul2 )
+{
+    mpfr_init( Something );
+    mpfr_mul_ui( Something, Mul1, Mul2, Round );
+}
+
+/*-----------------------------------------------Programm Behavior-------------------------------------*/
 
 void setPrecusion( const char* PrecusionString )
 {
@@ -478,36 +506,14 @@ void makeDesk(
     }
 }
 
-void makeHZPointsPlatim()
+/*-------------------Subroutines Planim-----------------*/
+
+void calacDistancesPlatim()
 {
     /* EH = 34E */
     /* HZ = 131 5/12 */
     /* EZ -> 131 5/12 - 34 */
     mpfr_t Tmp, Tmp2;
-
-    PytagoMap->H = ( mpfr_t* ) malloc( sizeof( mpfr_t ) * 2 );
-    if( NULL == PytagoMap->H )
-    {
-        errorAndOut( "Somethings wrong with the memory, jim." );
-    }
-
-    PytagoMap->K = ( mpfr_t* ) malloc( sizeof( mpfr_t ) * 2 );
-    if( NULL == PytagoMap->K )
-    {
-        errorAndOut( "Somethings wrong with the memory, jim." );
-    }
-
-    PytagoMap->O = ( mpfr_t* ) malloc( sizeof( mpfr_t ) * 2 );
-    if( NULL == PytagoMap->O )
-    {
-        errorAndOut( "Somethings wrong with the memory, jim." );
-    }
-
-    PytagoMap->S = ( mpfr_t* ) malloc( sizeof( mpfr_t ) * 2 );
-    if( NULL == PytagoMap->S )
-    {
-        errorAndOut( "Somethings wrong with the memory, jim." );
-    }
 
     /* HZ = 131 5/12 */
     mpfr_init( Tmp2 );
@@ -523,35 +529,68 @@ void makeHZPointsPlatim()
     /* 1E =  (Kantenlänge/2)/(131 5/12 - 34) */
     mpfr_init( PytagoMap->Einheit );
     mpfr_div( PytagoMap->Einheit, PytagoMap->Kantenlaenge[ 1 ], Tmp, Round );
+
 #ifdef DEBUG
-    printf("\nEine Einheit ist: ");
+    printf("\nEine Einheit beträgt: ");
     mpfr_out_str ( stdout, 10, 0, PytagoMap->Einheit, Round );
     fflush( stdout );
 #endif
 
+    /* Calculate Einheiten */
     /*Set HZ = 131 5/12E */
-    mpfr_init( PytagoMap->ZH );
-    mpfr_mul( PytagoMap->ZH, PytagoMap->Einheit, Tmp2, Round );
+    initAndMultiply( PytagoMap->ZH, PytagoMap->Einheit, Tmp2 );
+
+    /* EH = 34*Einheit */
+    initAndMultiplyUi( PytagoMap->EH, PytagoMap->Einheit, 34 );
+
+    /* KH = 79*Einheit */
+    initAndMultiplyUi( PytagoMap->KH, PytagoMap->Einheit, 79 );
+
+    /* OH = 52*Einheit siehe seite 121 */
+    initAndMultiplyUi( PytagoMap->OH, PytagoMap->Einheit, 52 );
+
+    /* SH = 115*Einheit siehe seite 121 */
+    initAndMultiplyUi( PytagoMap->SH, PytagoMap->Einheit, 115 );
+
 #ifdef DEBUG
+    printf("\nEH ist: ");
+    mpfr_out_str ( stdout, 10, 0, PytagoMap->EH, Round );
+    fflush( stdout );
+    printf("\nKH ist: ");
+    mpfr_out_str ( stdout, 10, 0, PytagoMap->KH, Round );
+    fflush( stdout );
+    printf("\nOH ist: ");
+    mpfr_out_str ( stdout, 10, 0, PytagoMap->OH, Round );
+    fflush( stdout );
+    printf("\nSH ist: ");
+    mpfr_out_str ( stdout, 10, 0, PytagoMap->SH, Round );
+    fflush( stdout );
     printf("\nZH ist: ");
     mpfr_out_str ( stdout, 10, 0, PytagoMap->ZH, Round );
     fflush( stdout );
 #endif
 
-    /* EH = 34*Einheit */
-    mpfr_init( PytagoMap->EH );
-    mpfr_mul_ui( PytagoMap->EH, PytagoMap->Einheit, 34, Round );
-#ifdef DEBUG
-    printf("\nEH ist: ");
-    mpfr_out_str ( stdout, 10, 0, PytagoMap->EH, Round );
-    fflush( stdout );
-#endif
-    /* H = E_x, E_y+EH */
-    mpfr_init( PytagoMap->H[ 0 ] );
-    mpfr_set( PytagoMap->H[ 0 ], PytagoMap->E[ 0 ], Round );
+    /* Cleanu */
+    mpfr_clear( Tmp );
+    mpfr_clear( Tmp2 );
+    mpfr_free_cache ();
+}
 
-    mpfr_init( PytagoMap->H[ 1 ] );
-    mpfr_add( PytagoMap->H[ 1 ], PytagoMap->E[ 1 ], PytagoMap->EH, Round );
+void makeHZPointsPlatim()
+{
+
+    /* H = E_x, E_y+EH */
+    PytagoMap->H = setPointByAddOnY( PytagoMap->E, PytagoMap->EH );
+
+    /* K = H_x, H_y-KH */
+    PytagoMap->K = setPointBySubOnY( PytagoMap->H, PytagoMap->KH );
+
+    /* O = H_x, H_y-OH */
+    PytagoMap->O = setPointBySubOnY( PytagoMap->H, PytagoMap->OH );
+
+    /* S = H_x, H_y-SH */
+    PytagoMap->S = setPointBySubOnY( PytagoMap->H, PytagoMap->SH );
+
 #ifdef DEBUG
     printf("\nPoint H ist: (");
     mpfr_out_str ( stdout, 10, 0, PytagoMap->H[ 0 ], Round );
@@ -559,66 +598,21 @@ void makeHZPointsPlatim()
     mpfr_out_str ( stdout, 10, 0, PytagoMap->H[ 1 ], Round );
     printf(")");
     fflush( stdout );
-#endif
-    /* KH = 79*Einheit */
-    mpfr_init( PytagoMap->KH );
-    mpfr_mul_ui( PytagoMap->KH, PytagoMap->Einheit, 79, Round );
-#ifdef DEBUG
-    printf("\nPoint KH ist: ");
-    mpfr_out_str ( stdout, 10, 0, PytagoMap->KH, Round );
-    fflush( stdout );
-#endif
-    /* K = H_x, H_y-KH */
-    mpfr_init( PytagoMap->K[ 0 ] );
-    mpfr_set( PytagoMap->K[ 0 ], PytagoMap->H[ 0 ], Round );
 
-    mpfr_init( PytagoMap->K[ 1 ] );
-    mpfr_sub( PytagoMap->K[ 1 ], PytagoMap->H[ 1 ], PytagoMap->KH, Round );
-#ifdef DEBUG
     printf("\nPoint K ist: (");
     mpfr_out_str ( stdout, 10, 0, PytagoMap->K[ 0 ], Round );
     printf(", ");
     mpfr_out_str ( stdout, 10, 0, PytagoMap->K[ 1 ], Round );
     printf(")");
     fflush( stdout );
-#endif
-    /* OH = 52*Einheit siehe seite 121 */
-    mpfr_init( PytagoMap->OH );
-    mpfr_mul_ui( PytagoMap->OH, PytagoMap->Einheit, 52, Round );
-#ifdef DEBUG
-    printf("\nPoint OH ist: ");
-    mpfr_out_str ( stdout, 10, 0, PytagoMap->OH, Round );
-    fflush( stdout );
-#endif
-    /* O = H_x, H_y-OH */
-    mpfr_init( PytagoMap->O[ 0 ] );
-    mpfr_set( PytagoMap->O[ 0 ], PytagoMap->H[ 0 ], Round );
 
-    mpfr_init( PytagoMap->O[ 1 ] );
-    mpfr_sub( PytagoMap->O[ 1 ], PytagoMap->H[ 1 ], PytagoMap->OH, Round );
-#ifdef DEBUG
     printf("\nPoint O ist: (");
     mpfr_out_str ( stdout, 10, 0, PytagoMap->O[ 0 ], Round );
     printf(", ");
     mpfr_out_str ( stdout, 10, 0, PytagoMap->O[ 1 ], Round );
     printf(")");
     fflush( stdout );
-#endif
-    /* SH = 115*Einheit siehe seite 121 */
-    mpfr_init( PytagoMap->SH );
-    mpfr_mul_ui( PytagoMap->SH, PytagoMap->Einheit, 115, Round );
-#ifdef DEBUG
-    printf("\nPoint SH ist: ");
-    mpfr_out_str ( stdout, 10, 0, PytagoMap->SH, Round );
-    fflush( stdout );
-#endif
-    /* S = H_x, H_y-SH */
-    mpfr_init( PytagoMap->S[ 0 ] );
-    mpfr_set( PytagoMap->S[ 0 ], PytagoMap->H[ 0 ], Round );
 
-    mpfr_init( PytagoMap->S[ 1 ] );
-    mpfr_sub( PytagoMap->S[ 1 ], PytagoMap->H[ 1 ], PytagoMap->SH, Round );
-#ifdef DEBUG
     printf("\nPoint S ist: (");
     mpfr_out_str ( stdout, 10, 0, PytagoMap->S[ 0 ], Round );
     printf(", ");
@@ -626,9 +620,6 @@ void makeHZPointsPlatim()
     printf(")");
     fflush( stdout );
 #endif
-    mpfr_clear( Tmp );
-    mpfr_clear( Tmp2 );
-    mpfr_free_cache ();
 }
 /* GKL...4 Einheiten bogenmass */
 void makeLimitsPlatim()
@@ -858,8 +849,12 @@ int main( int ArgCount, char* ArgVar[] )
 #endif
     makeDesk( ArgVar[ 4 ], ArgVar[ 5 ], ArgVar[ 6 ] );
 #ifdef DEBUG
-printf("\n\nStart planimetik.");
+    printf("\n\nStart planimetik.");
     fflush( stdout );
+    printf( "\nCalculate Distances" );
+#endif
+    calacDistancesPlatim();
+#ifdef DEBUG
     printf("\nSet HZ Punkte.");
     fflush( stdout );
 #endif

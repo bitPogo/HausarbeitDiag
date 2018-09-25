@@ -108,6 +108,7 @@ Painter.strokeText(
     180,
     86.141968
 );
+
 //S
 Painter.moveTo( 175, 37.639008 );
 Painter.arc(175, 37.639008, 2, 0, Math.PI * 2, true);
@@ -116,52 +117,6 @@ Painter.strokeText(
     180,
     37.639008
 );
-//G
-//2.1795532e1, 8.3117523
-/*Painter.moveTo( 217.95532, 83.117523 );
-Painter.arc(217.95532, 83.117523, 2, 0, Math.PI * 2, true);
-Painter.strokeText(
-    "G",
-    217.95532,
-    83.117523
-);
-Painter.moveTo( 175, 126.17615 );
-/*
-var w = [ 5000*1798.5498, 5000*-1798.5498 ]
-var PP = [ 217.95532+w[0], 83.117523+w[1] ]
-Painter.lineTo( PP[0], PP[1])*/
-//1.7987675e5, -1.7984675
-/*Painter.lineTo(1798767.5, -1798767.5);
-//1.0345764e1 1.9771851e1
-//2.4654236e1 5.4633789
-//M'
-Painter.moveTo( 246.54236, 54.6337891 );
-Painter.arc(246.54236, 54.6337891, 2, 0, Math.PI * 2, true);
-Painter.strokeText(
-    "M'",
-    246.54236,
-    54.6337891
-);
-    //, 1.0117615 )
-//L
-//1.3204453e1, 8.3117523
-Painter.moveTo( 132.04453, 83.117523 );
-Painter.arc( 132.04453, 83.117523, 2, 0, Math.PI * 2, true);
-Painter.strokeText(
-    "L",
-    132.04453,
-    83.117523
-);
-
-//M
-//2.5047913e1, 5.8800201
-/*Painter.moveTo( 250.47913, 58.800201 );
-Painter.arc( 250.47913, 58.800201, 2, 0, Math.PI * 2, true);
-Painter.strokeText(
-    "M",
-    250.47913,
-    58.800201
-);*/
 
 //ZH
 Painter.moveTo( 175, 126.17615 );

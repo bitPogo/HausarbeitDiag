@@ -703,7 +703,7 @@ void makeLimitsPlatim()
     mpfr_init( Tmp[ 3 ] );
 
     mpfr_mul_si( Diameter, PytagoMap->KH, 2, Round );
-    
+
     /* 18 mal : see 119 */
     mpfr_mul_si(Radians, PytagoMap->Einheit, 4, Round);
     mpfr_mul_si(Radians, Radians, 18, Round);
@@ -723,9 +723,24 @@ void makeLimitsPlatim()
     printf(")");
     fflush( stdout );
 #endif
-
+/* Gerade von HG Verlängern */
+    mpfr_sub( Tmp[ 0 ], PytagoMap->G[ 0 ], PytagoMap->H[ 0 ], Round );
+    mpfr_sub( Tmp[ 1 ], PytagoMap->G[ 1 ], PytagoMap->H[ 1 ], Round );
+    getEinheitsVector( Tmp, Tmp, Round );
+    mpfr_mul_ui( Tmp[ 0 ], Tmp[ 0 ], 10, Round );
+    mpfr_mul_ui( Tmp[ 1 ], Tmp[ 1 ], 10, Round );
+    mpfr_add( Tmp[ 0 ], Tmp[ 0 ], PytagoMap->H[ 0 ], Round );
+    mpfr_add( Tmp[ 1 ], Tmp[ 1 ], PytagoMap->H[ 1 ], Round );
+#ifdef DEBUG
+    printf("\nCalculated G' is: (");
+    mpfr_out_str ( stdout, 10, 0, Tmp[ 0 ], Round );
+    printf(", ");
+    mpfr_out_str ( stdout, 10, 0, Tmp[ 1 ], Round );
+    printf(")");
+    fflush( stdout );
+#endif
+    /* Set M */
     rotatePoint( PytagoMap->M, PytagoMap->Z, PytagoMap->H, Degree, Round );
-    mirrowPoint( PytagoMap->M, PytagoMap->H[0], PytagoMap->H[1], PytagoMap->M, Round );
 #ifdef DEBUG
     printf("\nCalculated M is: (");
     mpfr_out_str ( stdout, 10, 0, PytagoMap->M[ 0 ], Round );
@@ -735,30 +750,44 @@ void makeLimitsPlatim()
     fflush( stdout );
 #endif
 
-    /* Gerade von HG Verlängern */
-    mpfr_mul_si( Tmp[ 0 ], Degree, 1000, Round );
-    mpfr_add( Tmp[ 0 ], Tmp[ 0 ], PytagoMap->G[ 0 ], Round );
-
-    mpfr_mul_si( Tmp[ 1 ], Degree, -1000, Round );
-    mpfr_add( Tmp[ 1 ], Tmp[ 1 ], PytagoMap->G[ 1 ], Round );
-#ifdef DEBUG
-    printf("\nCalculated G' is: (");
-    mpfr_out_str ( stdout, 10, 0, Tmp[ 0 ], Round );
-    printf(", ");
-    mpfr_out_str ( stdout, 10, 0, Tmp[ 1 ], Round );
-    printf(")");
-    fflush( stdout );
-#endif
-
+/*
     intersectCircleLine( Tmp, PytagoMap->H, Tmp, PytagoMap->H, PytagoMap->ZH, Round );
 #ifdef DEBUG
-    printf("\nCalculated M is: (");
+    printf("\nCalculated M_1 is: (");
     mpfr_out_str ( stdout, 10, 0, Tmp[ 0 ], Round );
     printf(", ");
     mpfr_out_str ( stdout, 10, 0, Tmp[ 1 ], Round );
     printf(")");
+    printf("\nCalculated M_2 is: (");
+    mpfr_out_str ( stdout, 10, 0, Tmp[ 2 ], Round );
+    printf(", ");
+    mpfr_out_str ( stdout, 10, 0, Tmp[ 3 ], Round );
+    printf(")");
     fflush( stdout );
 #endif
+*/
+    /* Set X */
+    rotatePoint( PytagoMap->X, PytagoMap->O, PytagoMap->H, Degree, Round );
+#ifdef DEBUG
+    printf("\nCalculated X is: (");
+    mpfr_out_str ( stdout, 10, 0, PytagoMap->X[ 0 ], Round );
+    printf(", ");
+    mpfr_out_str ( stdout, 10, 0, PytagoMap->X[ 1 ], Round );
+    printf(")");
+    fflush( stdout );
+#endif
+
+    /* Set S */
+    rotatePoint( PytagoMap->R, PytagoMap->S, PytagoMap->H, Degree, Round );
+#ifdef DEBUG
+    printf("\nCalculated R is: (");
+    mpfr_out_str ( stdout, 10, 0, PytagoMap->R[ 0 ], Round );
+    printf(", ");
+    mpfr_out_str ( stdout, 10, 0, PytagoMap->R[ 1 ], Round );
+    printf(")");
+    fflush( stdout );
+#endif
+
 
     /* Set L */
     mpfr_mul_si( Radians, PytagoMap->Einheit, 4, Round );

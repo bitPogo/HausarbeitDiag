@@ -962,6 +962,29 @@ extern void getDegreeOnCircle( mpfr_t Return, mpfr_t Radians, mpfr_t Diameter, m
     mpfr_free_cache ();
 }
 /**
+ * Converts degrees to rad
+ * @param Return | mpfr_t | the computed radians
+ * @param Degree | mpfr_t | the given degrees
+ * @param Round | mpfr_rnd_t | which rounding to use
+ */
+extern void degree2Rad (mpfr_t Return, mpfr_t Degree, mpfr_rnd_t Round )
+{
+    /*
+     * degrees = radians × 180° / π
+     * degrees/180° × π = radians
+     */
+    if( FALSE == PiIsInit )
+    {
+        mpfr_init( Pi );
+        mpfr_const_pi( Pi, Round );
+        PiIsInit = TRUE;
+    }
+    /*degrees/180°*/
+    mpfr_div_ui( Return, Degree, 180, Round );
+    /*degrees/180° × π*/
+    mpfr_mul( Return, Return, Pi, Round );
+}
+/**
  * Rotates a point at a given Point
  * @param Return | array of mpfr_t | n = 2 | the computed rotated point
  * @param Point | array of mpfr_t | n = 2 | Point which should be rotated
@@ -982,20 +1005,7 @@ extern void rotatePoint( mpfr_t* Return, mpfr_t* Point, mpfr_t* Center, mpfr_t D
     mpfr_init( Tmp1 );
     mpfr_init( Tmp2 );
     /* We have to calculate \theta in rad */
-    /*
-     * degrees = radians × 180° / π
-     * degrees/180° × π = radians
-     */
-    if( FALSE == PiIsInit )
-    {
-        mpfr_init( Pi );
-        mpfr_const_pi( Pi, Round );
-        PiIsInit = TRUE;
-    }
-    /*degrees/180°*/
-    mpfr_div_ui( Tmp1, Degree, 180, Round );
-    /*degrees/180° × π*/
-    mpfr_mul( Tmp1, Tmp1, Pi, Round );
+    degree2Rad( Tmp1, Degree, Round );
     /* sin(\theta) | cos(\theta) */
     mpfr_sin_cos( Sin, Cos, Tmp1, Round );
     /* (x - x_1) */
@@ -1027,6 +1037,26 @@ extern void rotatePoint( mpfr_t* Return, mpfr_t* Point, mpfr_t* Center, mpfr_t D
     mpfr_clear( Cos );
     mpfr_clear( X );
     mpfr_clear( Y );
+    mpfr_clear( Tmp1 );
+    mpfr_clear( Tmp2 );
+    mpfr_free_cache();
+}
+
+extern void getEinheitsVector( mpfr_t* Return, mpfr_t* Point, mpfr_rnd_t Round )
+{
+    mpfr_t Tmp1, Tmp2;
+    mpfr_init( Tmp1 );
+    mpfr_init( Tmp2 );
+
+    /* |v|=√x^2+y^2 */
+    mpfr_pow_ui( Tmp1, Point[ 0 ], 2, Round );
+    mpfr_pow_ui( Tmp2, Point[ 1 ], 2, Round );
+    mpfr_add( Tmp1, Tmp1, Tmp2, Round );
+    mpfr_sqrt( Tmp1, Tmp1, Round );
+    mpfr_div( Tmp1, Tmp2, Tmp1, Round );
+    mpfr_mul( Return[ 0 ], Point[ 0 ], Tmp1, Round );
+    mpfr_mul( Return[ 1 ], Point[ 1 ], Tmp1, Round );
+
     mpfr_clear( Tmp1 );
     mpfr_clear( Tmp2 );
     mpfr_free_cache();

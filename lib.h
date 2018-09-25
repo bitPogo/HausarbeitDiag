@@ -139,6 +139,13 @@ extern unsigned short isDigit( char Char, unsigned  short IsHex );
  */
 extern void getDegreeOnCircle( mpfr_t Return, mpfr_t Radians, mpfr_t Diameter, mpfr_rnd_t Round );
 /**
+ * Converts degrees to rad
+ * @param Return | mpfr_t | the computed radians
+ * @param Degree | mpfr_t | the given degrees
+ * @param Round | mpfr_rnd_t | which rounding to use
+ */
+extern void degree2Rad (mpfr_t Return, mpfr_t Degree, mpfr_rnd_t Round );
+/**
  * Rotates a point at a given Point
  * @param Return | array of mpfr_t | n = 2 | the computed rotated point
  * @param Point | array of mpfr_t | n = 2 | Point which should be rotated
@@ -147,6 +154,9 @@ extern void getDegreeOnCircle( mpfr_t Return, mpfr_t Radians, mpfr_t Diameter, m
  * @param Round | mpfr_rnd_t | which rounding to use
  */
 extern void rotatePoint( mpfr_t* Return, mpfr_t* Point, mpfr_t* Center, mpfr_t Degree, mpfr_rnd_t Round );
+
+extern void getEinheitsVector( mpfr_t* Return, mpfr_t* Point, mpfr_rnd_t Round );
+
 /**
  * Prints a error-message to stderr and quits the programm
  * @param Message | const char* | the message

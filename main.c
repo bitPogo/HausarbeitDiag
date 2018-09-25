@@ -637,7 +637,6 @@ void makeLimitsPlatim()
 {
     mpfr_t Diameter, Radians, Degree;
     mpfr_t* Tmp;
-    int Counter;
 
     mpfr_init( Diameter );
     mpfr_init( Degree );
@@ -704,31 +703,29 @@ void makeLimitsPlatim()
     mpfr_init( Tmp[ 3 ] );
 
     mpfr_mul_si( Diameter, PytagoMap->KH, 2, Round );
-    for( Counter = 1; Counter <= 18; Counter++ )
-    {
-        /* 18 mal : see 119 */
-        mpfr_mul_si(Radians, PytagoMap->Einheit, 4, Round);
-        mpfr_mul_si(Radians, Radians, -Counter, Round);
+    
+    /* 18 mal : see 119 */
+    mpfr_mul_si(Radians, PytagoMap->Einheit, 4, Round);
+    mpfr_mul_si(Radians, Radians, 18, Round);
 
-        getDegreeOnCircle(Degree, Radians, Diameter, Round);
-        mpfr_add_si(Degree, Degree, 180, Round);
+    getDegreeOnCircle(Degree, Radians, Diameter, Round);
 #ifdef DEBUG
-        printf("\nCalculated %i degree of LKG is: ", Counter);
-        mpfr_out_str ( stdout, 10, 0, Degree, Round );
-        fflush( stdout );
+    printf("\nCalculated degree of LKG is: ");
+    mpfr_out_str ( stdout, 10, 0, Degree, Round );
+    fflush( stdout );
 #endif
-        rotatePoint( PytagoMap->G, PytagoMap->K, PytagoMap->H, Degree, Round );
+    rotatePoint( PytagoMap->G, PytagoMap->K, PytagoMap->H, Degree, Round );
 #ifdef DEBUG
-        printf("\nCalculated %i G is: (", Counter );
-        mpfr_out_str ( stdout, 10, 0, PytagoMap->G[ 0 ], Round );
-        printf(", ");
-        mpfr_out_str ( stdout, 10, 0, PytagoMap->G[ 1 ], Round );
-        printf(")");
-        fflush( stdout );
+    printf("\nCalculated G is: (" );
+    mpfr_out_str ( stdout, 10, 0, PytagoMap->G[ 0 ], Round );
+    printf(", ");
+    mpfr_out_str ( stdout, 10, 0, PytagoMap->G[ 1 ], Round );
+    printf(")");
+    fflush( stdout );
 #endif
-    }
 
     rotatePoint( PytagoMap->M, PytagoMap->Z, PytagoMap->H, Degree, Round );
+    mirrowPoint( PytagoMap->M, PytagoMap->H[0], PytagoMap->H[1], PytagoMap->M, Round );
 #ifdef DEBUG
     printf("\nCalculated M is: (");
     mpfr_out_str ( stdout, 10, 0, PytagoMap->M[ 0 ], Round );

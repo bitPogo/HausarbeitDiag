@@ -594,8 +594,6 @@ extern unsigned short intersectCircleLine(
         /* PointA_x - ABX * AbScalingFactor2 */
         mpfr_sub( Return[ 2 ], PointA[ 0 ], Tmp1, Round );
         /* ABY * AbScalingFactor2 */
-    printf( "\nhier\n" );
-    fflush( stdout );
         mpfr_mul( Tmp1, ABY, AbScalingFactor2, Round );
         /* PointA_x - ABY * AbScalingFactor2 */
         mpfr_sub( Return[ 3 ], PointA[ 1 ], Tmp1, Round );
@@ -957,7 +955,7 @@ extern void getDegreeOnCircle( mpfr_t Return, mpfr_t Radians, mpfr_t Diameter, m
     /* b*360° */
     mpfr_mul_ui( Tmp, Radians, 360, Round );
     /* (b*360°/pi) */
-    mpfr_div( Tmp, Radians, Pi, Round );
+    mpfr_div( Tmp, Tmp, Pi, Round );
     /* (b*360°/pi)/d */
     mpfr_div( Return, Tmp, Diameter, Round );
     mpfr_clear( Tmp );
@@ -966,12 +964,12 @@ extern void getDegreeOnCircle( mpfr_t Return, mpfr_t Radians, mpfr_t Diameter, m
 /**
  * Rotates a point at a given Point
  * @param Return | array of mpfr_t | n = 2 | the computed rotated point
- * @param PointA | array of mpfr_t | n = 2 | Point which should be rotated
- * @param PointB | array of mpfr_t | n = 2 | Point which should be the center of rotation
+ * @param Point | array of mpfr_t | n = 2 | Point which should be rotated
+ * @param Center | array of mpfr_t | n = 2 | Point which should be the center of rotation
  * @param Degree | mpfr_t | degree for rotation
  * @param Round | mpfr_rnd_t | which rounding to use
  */
-extern void rotatePoint( mpfr_t* Return, mpfr_t* PointA, mpfr_t* PointB, mpfr_t Degree, mpfr_rnd_t Round )
+extern void rotatePoint( mpfr_t* Return, mpfr_t* Point, mpfr_t* Center, mpfr_t Degree, mpfr_rnd_t Round )
 {
     /* x' = x1 + cos(\theta) * (x - x1) - sin(\theta) * (y - y1)
      * y' = y1 + sin(\theta) * (x - x1) + cos(\theta) * (y - y1)
@@ -983,13 +981,27 @@ extern void rotatePoint( mpfr_t* Return, mpfr_t* PointA, mpfr_t* PointB, mpfr_t 
     mpfr_init( Y );
     mpfr_init( Tmp1 );
     mpfr_init( Tmp2 );
-
+    /* We have to calculate \theta in rad */
+    /*
+     * degrees = radians × 180° / π
+     * degrees/180° × π = radians
+     */
+    if( FALSE == PiIsInit )
+    {
+        mpfr_init( Pi );
+        mpfr_const_pi( Pi, Round );
+        PiIsInit = TRUE;
+    }
+    /*degrees/180°*/
+    mpfr_div_ui( Tmp1, Degree, 180, Round );
+    /*degrees/180° × π*/
+    mpfr_mul( Tmp1, Tmp1, Pi, Round );
     /* sin(\theta) | cos(\theta) */
-    mpfr_sin_cos( Sin, Cos, Degree, Round);
+    mpfr_sin_cos( Sin, Cos, Tmp1, Round );
     /* (x - x_1) */
-    mpfr_sub( X, PointB[ 0 ], PointA[ 0 ], Round  );
+    mpfr_sub( X, Point[ 0 ], Center[ 0 ], Round  );
     /* (y - y_1) */
-    mpfr_sub( Y, PointB[ 1 ], PointA[ 1 ], Round  );
+    mpfr_sub( Y, Point[ 1 ], Center[ 1 ], Round  );
 
     /* x' = x1 + cos(\theta) * (x - x1) - sin(\theta) * (y - y1) */
     /* cos(\theta) * (x - x1) */
@@ -999,7 +1011,7 @@ extern void rotatePoint( mpfr_t* Return, mpfr_t* PointA, mpfr_t* PointB, mpfr_t 
     /* cos(\theta) * (x - x1) - sin(\theta) * (y - y1) */
     mpfr_sub( Tmp1, Tmp1, Tmp2, Round );
     /* x1 + cos(\theta) * (x - x1) - sin(\theta) * (y - y1) */
-    mpfr_add( Return[ 0 ], PointB[ 0 ], Tmp1, Round );
+    mpfr_add( Return[ 0 ], Center[ 0 ], Tmp1, Round );
 
     /* y' = y1 + sin(\theta) * (x - x1) + cos(\theta) * (y - y1) */
     /* sin(\theta) * (x - x1) */
@@ -1009,7 +1021,7 @@ extern void rotatePoint( mpfr_t* Return, mpfr_t* PointA, mpfr_t* PointB, mpfr_t 
     /* sin(\theta) * (x - x1) + cos(\theta) * (y - y1) */
     mpfr_add( Tmp1, Tmp1, Tmp2, Round );
     /* y1 + sin(\theta) * (x - x1) + cos(\theta) * (y - y1) */
-    mpfr_add( Return[ 1 ], PointB[ 1 ], Tmp1, Round );
+    mpfr_add( Return[ 1 ], Center[ 1 ], Tmp1, Round );
     /*Housekeeping*/
     mpfr_clear( Sin );
     mpfr_clear( Cos );

@@ -141,12 +141,12 @@ extern void getDegreeOnCircle( mpfr_t Return, mpfr_t Radians, mpfr_t Diameter, m
 /**
  * Rotates a point at a given Point
  * @param Return | array of mpfr_t | n = 2 | the computed rotated point
- * @param PointA | array of mpfr_t | n = 2 | Point which should be rotated
- * @param PointB | array of mpfr_t | n = 2 | Point which should be the center of rotation
+ * @param Point | array of mpfr_t | n = 2 | Point which should be rotated
+ * @param Center | array of mpfr_t | n = 2 | Point which should be the center of rotation
  * @param Degree | mpfr_t | degree for rotation
  * @param Round | mpfr_rnd_t | which rounding to use
  */
-extern void rotatePoint( mpfr_t* Return, mpfr_t* PointA, mpfr_t* PointB, mpfr_t Degree, mpfr_rnd_t Round );
+extern void rotatePoint( mpfr_t* Return, mpfr_t* Point, mpfr_t* Center, mpfr_t Degree, mpfr_rnd_t Round );
 /**
  * Prints a error-message to stderr and quits the programm
  * @param Message | const char* | the message

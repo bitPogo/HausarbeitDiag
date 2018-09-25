@@ -57,7 +57,7 @@ extern void mirrowPointOnX( mpfr_t* Return, mpfr_t X, mpfr_t* Point, mpfr_rnd_t 
  * @param Point | array of mpfr_t | n = 2 | the original point
  * @param Round | mpfr_rnd_t | which rounding to use
  */
-extern void mirrowPointOnY( mpfr_t* Return, mpfr_t YAxis, mpfr_t* Point, mpfr_rnd_t Round );
+extern void mirrowPointOnY( mpfr_t* Return, mpfr_t Y, mpfr_t* Point, mpfr_rnd_t Round );
 /**
  * Mirrows a point on x- and y-axis
  * @param Return | array of mpfr_t | n = 2 | the mirrowed point

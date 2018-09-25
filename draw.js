@@ -11,6 +11,7 @@ Point C is: (1.0000000e1, 2.5000000)
 Point D is: (2.5000000e1, 2.5000000)
 Point E is: (1.7500000e1, 1.0000000e1)
 Point Z is: (1.7500000e1, 2.5000000)
+
 Set HZ Punkte.
 Eine Einheit ist: 7.6988816e-2
 EH ist: 2.6176186
@@ -224,12 +225,12 @@ Painter.strokeText(
 
 //F
 //Calculated F is: (2.3995728e1, 4.8605881)
-Painter.moveTo( 239.95667, 48.605347 );
-Painter.arc( 239.95667, 48.605347, 2, 0, Math.PI * 2, true);
+Painter.moveTo( 239.95728, 48.605881 );
+Painter.arc( 239.95728, 48.605881, 2, 0, Math.PI * 2, true);
 Painter.strokeText(
     "F",
-    239.95667,
-    48.605347
+    239.95728,
+    48.605881
 );
 
 Painter.stroke();

@@ -29,6 +29,7 @@ Calculated G is: (1.6620850e1, 1.8635864e1)
 Painter.beginPath();
 
 //AB
+Painter.moveTo( 100, 100 );
 Painter.arc(100, 100, 1, 0, Math.PI * 2, true);
 Painter.strokeText(
     "A",
@@ -66,8 +67,7 @@ Painter.lineTo( 100, 25);
 //H
 Painter.moveTo( 175, 126.17615 );
 Painter.lineTo( 175, 25);
-Painter.stroke();
-Painter.closePath();
+
 //E
 Painter.moveTo( 175, 100 );
 Painter.arc(175, 100, 1, 0, Math.PI * 2, true);
@@ -240,4 +240,119 @@ Painter.strokeText(
     110.04272,
     48.605881
 );
-Painter.stroke();
+Painter.stroke()
+Painter.closePath();
+
+//Glob
+Painter.beginPath();
+var AddY = 1000;
+//AB
+Painter.moveTo( 100, 100+AddY );
+Painter.arc(100, 100+AddY, 1, 0, Math.PI * 2, true);
+Painter.strokeText(
+    "A",
+    100,
+    110+AddY
+);
+Painter.moveTo( 100, 100+AddY );
+Painter.lineTo( 250, 100+AddY );
+Painter.arc( 250, 100+AddY, 1, 0, Math.PI * 2, true);
+Painter.strokeText(
+    "B",
+    250,
+    110+AddY
+);
+//AC
+Painter.moveTo( 100, 100+AddY );
+//Painter.lineTo( 100, 25+AddY);
+Painter.arc(100, 25+AddY, 1, 0, Math.PI * 2, true);
+Painter.strokeText(
+    "C",
+    90,
+    35+AddY
+);
+//BD
+Painter.moveTo( 250, 100+AddY);
+//Painter.lineTo( 250, 25+AddY);
+Painter.arc( 250, 25+AddY, 1, 0, Math.PI * 2, true);
+Painter.strokeText(
+    "D",
+    255,
+    35+AddY
+);
+//CD
+Painter.lineTo( 100, 25+AddY);
+//E
+Painter.moveTo( 175, 100+AddY );
+Painter.arc(175, 100+AddY, 1, 0, Math.PI * 2, true);
+Painter.strokeText(
+    "E",
+    180,
+    100+AddY
+);
+//Z
+Painter.moveTo( 175, 25 +AddY);
+Painter.arc(175, 25+AddY, 1, 0, Math.PI * 2, true);
+Painter.strokeText(
+    "Z",
+    180,
+    20+AddY
+);
+//H
+//Point H ist: (1.7500000e1, 3.8680573)
+Painter.moveTo( 175, 38.680573 + AddY)
+Painter.arc( 175, 38.680573 + AddY, 1, 0, Math.PI * 2, true);
+Painter.strokeText(
+    "H",
+    176,
+    39.680573 + AddY
+);
+
+//G
+//Point G ist: (1.7500000e1, 5.8541718)
+Painter.moveTo( 175, 58.541718 + AddY)
+Painter.arc( 175, 58.541718 + AddY, 1, 0, Math.PI * 2, true);
+Painter.strokeText(
+    "G",
+    176,
+    59.541718 + AddY
+);
+
+//K
+//Point K ist: (1.7500000e1, 9.1180573)
+Painter.moveTo( 175, 91.180573 + AddY)
+Painter.arc( 175, 91.180573 + AddY, 1, 0, Math.PI * 2, true);
+Painter.strokeText(
+    "K",
+    176,
+    92.180573 + AddY
+);
+
+//L
+//Point L ist: (1.7500000e1, 1.9020813e1)
+Painter.moveTo( 175, 190.20813 + AddY)
+Painter.arc( 175, 190.20813 + AddY, 1, 0, Math.PI * 2, true);
+Painter.strokeText(
+    "L",
+    176,
+    191.20813 + AddY
+);
+Painter.lineTo( 175, 25 +AddY);
+
+//Hilskreise
+
+//HL
+Painter.moveTo( 175, 190.20813 + AddY );
+Painter.arc( 175, 190.20813 + AddY, 151.52771, 0, Math.PI * 2, true);
+//GL
+Painter.moveTo( 175, 190.20813 + AddY );
+Painter.arc( 175, 190.20813 + AddY, 131.66672, 0, Math.PI * 2, true);
+//ZL
+Painter.moveTo( 175, 190.20813 + AddY );
+Painter.arc( 175, 190.20813 + AddY, 165.20844, 0, Math.PI * 2, true);
+//KL
+Painter.moveTo( 175, 190.20813 + AddY );
+Painter.arc( 175, 190.20813 + AddY, 99.027710, 0, Math.PI * 2, true);
+
+Painter.stroke()
+Painter.closePath();

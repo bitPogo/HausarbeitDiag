@@ -143,6 +143,7 @@ Painter.strokeText(
 
 
 //Gerade Verlängern
+//HG'
 //9.2889355e2, -8.9877637e2
 Painter.moveTo(175, 126.17615)
 Painter.lineTo( 1272.3657, -724.44824 )
@@ -188,4 +189,55 @@ Painter.strokeText(
     48.605881
 );
 
+//L
+//Calculated L ist: (1.2692963e1, 8.8914337)
+Painter.moveTo( 126.92963, 88.914337 );
+Painter.arc( 126.92963, 88.9143371, 2, 0, Math.PI * 2, true);
+Painter.strokeText(
+    "L",
+    126.92963,
+    88.914337
+);
+//HL'
+//Calculated L' ist: (-6.1535767e1, -4.8647095e1)
+Painter.moveTo( 175, 126.17615)
+Painter.lineTo( -615.35767, -486.47095 )
+
+//N
+//Calculated N ist: (9.5034790, 6.4191055)
+Painter.moveTo( 95.034790, 64.191055 );
+Painter.arc( 95.034790, 64.1910551, 2, 0, Math.PI * 2, true);
+Painter.strokeText(
+    "N",
+    95.034790,
+    64.191055
+);
+
+//P
+//Calculated P ist: (1.4335876e1, 1.0164948e1)
+Painter.moveTo( 143.35876, 101.64948 );
+Painter.arc( 143.35876, 101.64948, 2, 0, Math.PI * 2, true);
+Painter.strokeText(
+    "P",
+    143.35876,
+    101.64948
+);
+//T
+//Calculated T ist: (1.0502411e1, 7.1934280)
+Painter.moveTo( 105.02411, 71.934280 );
+Painter.arc( 105.02411, 71.934280, 2, 0, Math.PI * 2, true);
+Painter.strokeText(
+    "T",
+    105.02411,
+    71.934280
+);
+//U
+//Calculated U ist: (1.1004272e1, 4.8605881)
+Painter.moveTo( 110.04272, 48.605881 );
+Painter.arc( 110.04272, 48.605881, 2, 0, Math.PI * 2, true);
+Painter.strokeText(
+    "U",
+    110.04272,
+    48.605881
+);
 Painter.stroke();

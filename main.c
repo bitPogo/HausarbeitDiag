@@ -99,7 +99,7 @@ void makeDesk(
 );
 /**
  * Sets a Point by move it on y-axis down
- * @returns NewPoint | mpfr_t* | the computed Point
+ * @return NewPoint | mpfr_t* | the computed Point
  * @param OldPoint | mpfr_t* | input Point
  * @param Distance | mpfr_t | distance of movement on y-axis
  */
@@ -113,26 +113,34 @@ mpfr_t* setPointBySubOnY( mpfr_t* OldPoint, mpfr_t Distance );
 mpfr_t* setPointByAddOnY( mpfr_t* OldPoint, mpfr_t Distance );
 /**
  * Sets a Point by move it on x-axis left
- * @returns NewPoint | mpfr_t* | the computed Point
+ * @return NewPoint | mpfr_t* | the computed Point
  * @param OldPoint | mpfr_t* | input Point
  * @param Distance | mpfr_t | distance of movement on y-axis
  */
 mpfr_t* setPointBySubOnX( mpfr_t* OldPoint, mpfr_t Distance );
 /**
  * Sets a Point by move it on x-axis right
- * @returns NewPoint | mpfr_t* | the computed Point
+ * @return NewPoint | mpfr_t* | the computed Point
  * @param OldPoint | mpfr_t* | input Point
  * @param Distance | mpfr_t | distance of movement on y-axis
  */
 mpfr_t* setPointByAddOnX( mpfr_t* OldPoint, mpfr_t Distance );
 /**
  * Sets a Point by mirrow it on the axis
- * @returns NewPoint | mpfr_t* | the computed Point
+ * @return NewPoint | mpfr_t* | the computed Point
  * @param OldPoint | mpfr_t* | input Point
  * @param MirrowPoint | mpfr_t* | coordinate center
  * @param Flag | int | MIRROW_BOTH for mirrow it on both axis, MIRROW_X for mirrow it on x-axis and MIRROW_Y for mirrow it on y-axis
  */
 mpfr_t* setPointAndMirrow( mpfr_t* OldPoint, mpfr_t* MirrowPoint, int Flag );
+/**
+ * Sets a point by rotate it on specific circlecenter
+ * @param OldPoint | array of mpfr_t | n = 2 | Point which should be rotated
+ * @param CircleCenter | array of mpfr_t | n = 2 | Point which should be the center of rotation
+ * @param Degree | mpfr_t | degree for rotation
+ * @return NewPoint | mpfr_t* | the computed Point
+ */
+mpfr_t* setPointAndRotate( mpfr_t* OldPoint, mpfr_t* CircleCenter, mpfr_t Degree );
 /**
  * inits a mpfr_t structure by mulitplying something with somthing
  * @param Target | mpfr_t | target structure
@@ -256,6 +264,21 @@ mpfr_t* setPointAndMirrow( mpfr_t* OldPoint, mpfr_t* MirrowPoint, int Flag )
         mirrowPoint( NewPoint, MirrowPoint[ 0 ], MirrowPoint[ 1 ], OldPoint, Round );
     }
 
+    return NewPoint;
+}
+
+mpfr_t* setPointAndRotate( mpfr_t* OldPoint, mpfr_t* CircleCenter, mpfr_t Degree )
+{
+    mpfr_t* NewPoint;
+    NewPoint = ( mpfr_t* ) malloc( sizeof( mpfr_t ) * 2 );
+    if(NULL == NewPoint)
+    {
+        errorAndOut( "Somethings wrong with the memory, jim." );
+    }
+    mpfr_init( NewPoint[ 0 ] );
+    mpfr_init( NewPoint[ 1 ] );
+
+    rotatePoint( NewPoint, OldPoint, CircleCenter, Degree, Round );
     return NewPoint;
 }
 
@@ -570,7 +593,7 @@ void calacDistancesPlatim()
     fflush( stdout );
 #endif
 
-    /* Cleanu */
+    /* Cleanup */
     mpfr_clear( Tmp );
     mpfr_clear( Tmp2 );
     mpfr_free_cache ();
@@ -578,7 +601,6 @@ void calacDistancesPlatim()
 
 void makeHZPointsPlatim()
 {
-
     /* H = E_x, E_y+EH */
     PytagoMap->H = setPointByAddOnY( PytagoMap->E, PytagoMap->EH );
 
@@ -627,76 +649,17 @@ void makeLimitsPlatim()
     mpfr_t Diameter, Radians, Degree;
     mpfr_t* Tmp;
 
+    Tmp = ( mpfr_t* ) malloc( sizeof( mpfr_t ) * 2 );
+    if(NULL == Tmp )
+    {
+        errorAndOut( "Somethings wrong with the memory, jim." );
+    }
+
     mpfr_init( Diameter );
     mpfr_init( Degree );
     mpfr_init( Radians );
-
-    PytagoMap->G = ( mpfr_t* ) malloc( sizeof( mpfr_t ) * 2 );
-    if( NULL == PytagoMap->G )
-    {
-        errorAndOut( "Somethings wrong with the memory, jim." );
-    }
-    PytagoMap->X = ( mpfr_t* ) malloc( sizeof( mpfr_t ) * 2 );
-    if( NULL == PytagoMap->X )
-    {
-        errorAndOut( "Somethings wrong with the memory, jim." );
-    }
-    PytagoMap->M = ( mpfr_t* ) malloc( sizeof( mpfr_t ) * 2 );
-    if( NULL == PytagoMap->M )
-    {
-        errorAndOut( "Somethings wrong with the memory, jim." );
-    }
-    PytagoMap->R = ( mpfr_t* ) malloc( sizeof( mpfr_t ) * 2 );
-    if( NULL == PytagoMap->R )
-    {
-        errorAndOut( "Somethings wrong with the memory, jim." );
-    }
-    PytagoMap->F = ( mpfr_t* ) malloc( sizeof( mpfr_t ) * 2 );
-    if( NULL == PytagoMap->F )
-    {
-        errorAndOut( "Somethings wrong with the memory, jim." );
-    }
-
-
-    PytagoMap->L = ( mpfr_t* ) malloc( sizeof( mpfr_t ) * 2 );
-    if( NULL == PytagoMap->L )
-    {
-        errorAndOut( "Somethings wrong with the memory, jim." );
-    }
-
-    PytagoMap->P = ( mpfr_t* ) malloc( sizeof( mpfr_t ) * 2 );
-    if( NULL == PytagoMap->P )
-    {
-        errorAndOut( "Somethings wrong with the memory, jim." );
-    }
-
-    Tmp = ( mpfr_t* ) malloc( sizeof( mpfr_t ) * 4 );
-    if( NULL == Tmp )
-    {
-        errorAndOut( "Somethings wrong with the memory, jim." );
-    }
-
-    mpfr_init( PytagoMap->G[ 0 ] );
-    mpfr_init( PytagoMap->G[ 1 ] );
-    mpfr_init( PytagoMap->X[ 0 ] );
-    mpfr_init( PytagoMap->X[ 1 ] );
-    mpfr_init( PytagoMap->M[ 0 ] );
-    mpfr_init( PytagoMap->M[ 1 ] );
-    mpfr_init( PytagoMap->R[ 0 ] );
-    mpfr_init( PytagoMap->R[ 1 ] );
-    mpfr_init( PytagoMap->F[ 0 ] );
-    mpfr_init( PytagoMap->F[ 1 ] );
-
-
-    mpfr_init( PytagoMap->L[ 0 ] );
-    mpfr_init( PytagoMap->L[ 1 ] );
-    mpfr_init( PytagoMap->P[ 0 ] );
-    mpfr_init( PytagoMap->P[ 1 ] );
-
     mpfr_init( Tmp[ 0 ] );
     mpfr_init( Tmp[ 1 ] );
-    mpfr_init( Tmp[ 2 ] );
-    mpfr_init( Tmp[ 3 ] );
 
     mpfr_mul_si( Diameter, PytagoMap->KH, 2, Round );
 
@@ -710,7 +673,77 @@ void makeLimitsPlatim()
     mpfr_out_str ( stdout, 10, 0, Degree, Round );
     fflush( stdout );
 #endif
-    rotatePoint( PytagoMap->G, PytagoMap->K, PytagoMap->H, Degree, Round );
+    /* G is depending on K see S 199 3.ff */
+    PytagoMap->G = setPointAndRotate( PytagoMap->K, PytagoMap->H, Degree );
+    /* M is depending on Z see S 199 3.ff */
+    PytagoMap->M = setPointAndRotate( PytagoMap->Z, PytagoMap->H, Degree );
+    /* O is depending on O see S 199 3.ff */
+    PytagoMap->X = setPointAndRotate( PytagoMap->O, PytagoMap->H, Degree );
+    /* S is depending on R see S 199 3.ff  */
+    PytagoMap->R = setPointAndRotate( PytagoMap->S, PytagoMap->H, Degree );
+
+    /* Set F */
+    /* See S. 121 7.ff */
+    /* Abstand im Intervall beim Äquator */
+    getRadiansOnCircle( Radians, Degree, Diameter, Round );
+
+    /* 18 mal : see 119 */
+    mpfr_mul_si(Radians, Radians, 18, Round);
+
+    getDegreeOnCircle(Degree, Radians, Diameter, Round);
+    mpfr_set_ui( Tmp[ 0 ], 180 , Round );
+    mpfr_sub( Degree, Degree, Tmp[ 0 ] , Round );
+
+    PytagoMap->F = setPointAndRotate( PytagoMap->Z, PytagoMap->H, Degree );
+
+    if( TRUE == Mirrowing )
+    {
+        /* L is mirrow by K of G on X */
+        PytagoMap->L = setPointAndMirrow( PytagoMap->G, PytagoMap->K, MIRROW_X );
+        /* N is mirrow by Z of M on X */
+        PytagoMap->N = setPointAndMirrow( PytagoMap->M, PytagoMap->Z, MIRROW_X );
+        /* P is mirrow by O of X on X */
+        PytagoMap->P = setPointAndMirrow( PytagoMap->X, PytagoMap->O, MIRROW_X );
+        /* T is mirrow by H of R on X */
+        PytagoMap->T = setPointAndMirrow( PytagoMap->R, PytagoMap->H, MIRROW_X );
+        /* U is mirrow by Z of F on X */
+        PytagoMap->U = setPointAndMirrow( PytagoMap->F, PytagoMap->Z, MIRROW_X );
+    }
+    else
+    {
+        /* Reset Degree */
+        mpfr_mul_si( Diameter, PytagoMap->KH, 2, Round );
+
+        /* 18 mal : see 119 */
+        mpfr_mul_si(Radians, PytagoMap->Einheit, 4, Round);
+        mpfr_mul_si(Radians, Radians, 18, Round);
+
+        getDegreeOnCircle(Degree, Radians, Diameter, Round);
+        /* Flip */
+        mpfr_mul_si( Degree, Degree, -1, Round );
+        /* L is depending on K see S 199 3.ff */
+        PytagoMap->L = setPointAndRotate( PytagoMap->K, PytagoMap->H, Degree );
+        /* N is depending on Z see S 199 3.ff */
+        PytagoMap->N = setPointAndRotate( PytagoMap->Z, PytagoMap->H, Degree );
+        /* P is depending on O see S 199 3.ff */
+        PytagoMap->P = setPointAndRotate( PytagoMap->O, PytagoMap->H, Degree );
+        /* T is depending on R see S 199 3.ff  */
+        PytagoMap->T = setPointAndRotate( PytagoMap->S, PytagoMap->H, Degree );
+
+        /* Set U */
+        /* See S. 121 7.ff */
+        getRadiansOnCircle( Radians, Degree, Diameter, Round );
+
+        /* 18 mal : see 119 */
+        mpfr_mul_si(Radians, Radians, 18, Round);
+
+        getDegreeOnCircle(Degree, Radians, Diameter, Round);
+        mpfr_set_ui( Tmp[ 0 ], 180 , Round );
+        mpfr_sub( Degree, Degree, Tmp[ 0 ] , Round );
+
+        PytagoMap->U = setPointAndRotate( PytagoMap->Z, PytagoMap->H, Degree );
+    }
+
 #ifdef DEBUG
     printf("\nCalculated G ist: (" );
     mpfr_out_str ( stdout, 10, 0, PytagoMap->G[ 0 ], Round );
@@ -734,89 +767,97 @@ void makeLimitsPlatim()
     mpfr_out_str ( stdout, 10, 0, Tmp[ 1 ], Round );
     printf(")");
     fflush( stdout );
-#endif
 
-    /* Set M */
-    rotatePoint( PytagoMap->M, PytagoMap->Z, PytagoMap->H, Degree, Round );
-#ifdef DEBUG
     printf("\nCalculated M ist: (");
     mpfr_out_str ( stdout, 10, 0, PytagoMap->M[ 0 ], Round );
     printf(", ");
     mpfr_out_str ( stdout, 10, 0, PytagoMap->M[ 1 ], Round );
     printf(")");
     fflush( stdout );
-#endif
 
-    /* Set X */
-    rotatePoint( PytagoMap->X, PytagoMap->O, PytagoMap->H, Degree, Round );
-#ifdef DEBUG
     printf("\nCalculated X ist: (");
     mpfr_out_str ( stdout, 10, 0, PytagoMap->X[ 0 ], Round );
     printf(", ");
     mpfr_out_str ( stdout, 10, 0, PytagoMap->X[ 1 ], Round );
     printf(")");
     fflush( stdout );
-#endif
 
-    /* Set S */
-    rotatePoint( PytagoMap->R, PytagoMap->S, PytagoMap->H, Degree, Round );
-#ifdef DEBUG
     printf("\nCalculated R ist: (");
     mpfr_out_str ( stdout, 10, 0, PytagoMap->R[ 0 ], Round );
     printf(", ");
     mpfr_out_str ( stdout, 10, 0, PytagoMap->R[ 1 ], Round );
     printf(")");
     fflush( stdout );
-#endif
 
-    /* Set F */
-    /* Abstand im Intervall beim Äquator */
-    getRadiansOnCircle( Radians, Degree, Diameter, Round );
-
-    /* 18 mal : see 119 */
-    mpfr_mul_si(Radians, Radians, 18, Round);
-
-    getDegreeOnCircle(Degree, Radians, Diameter, Round);
-    mpfr_set_ui( Tmp[ 0 ], 180 , Round );
-    mpfr_sub( Degree, Degree, Tmp[ 0 ] , Round );
-
-#ifdef DEBUG
-    printf("\nCalculated degree of MY/ZN ist: ");
-    mpfr_out_str ( stdout, 10, 0, Degree, Round );
-    fflush( stdout );
-#endif
-    rotatePoint( PytagoMap->F, PytagoMap->Z, PytagoMap->H, Degree, Round );
-#ifdef DEBUG
-    printf("\nCalculated F ist: (");
-    mpfr_out_str ( stdout, 10, 0, PytagoMap->F[ 0 ], Round );
-    printf(", ");
-    mpfr_out_str ( stdout, 10, 0, PytagoMap->F[ 1 ], Round );
-    printf(")");
-    fflush( stdout );
-#endif
-
-    /* Set L */
-    /*
-
-    mpfr_mul_si( Radians, PytagoMap->Einheit, 4, Round );
-    mpfr_mul_si( Degree, Degree, -1, Round );
-    rotatePoint( PytagoMap->L, PytagoMap->K, PytagoMap->H, Degree, Round );
-#ifdef DEBUG
     printf("\nCalculated L ist: (");
     mpfr_out_str ( stdout, 10, 0, PytagoMap->L[ 0 ], Round );
     printf(", ");
     mpfr_out_str ( stdout, 10, 0, PytagoMap->L[ 1 ], Round );
     printf(")");
     fflush( stdout );
-#endif*/
+
+    /* Gerade von HL Verlängern */
+    mpfr_sub( Tmp[ 0 ], PytagoMap->L[ 0 ], PytagoMap->H[ 0 ], Round );
+    mpfr_sub( Tmp[ 1 ], PytagoMap->L[ 1 ], PytagoMap->H[ 1 ], Round );
+    getEinheitsVector( Tmp, Tmp, Round );
+    mpfr_mul_ui( Tmp[ 0 ], Tmp[ 0 ], 100, Round );
+    mpfr_mul_ui( Tmp[ 1 ], Tmp[ 1 ], 100, Round );
+    mpfr_add( Tmp[ 0 ], Tmp[ 0 ], PytagoMap->H[ 0 ], Round );
+    mpfr_add( Tmp[ 1 ], Tmp[ 1 ], PytagoMap->H[ 1 ], Round );
+
+    printf("\nCalculated L' ist: (");
+    mpfr_out_str ( stdout, 10, 0, Tmp[ 0 ], Round );
+    printf(", ");
+    mpfr_out_str ( stdout, 10, 0, Tmp[ 1 ], Round );
+    printf(")");
+    fflush( stdout );
+
+    printf("\nCalculated N ist: (");
+    mpfr_out_str ( stdout, 10, 0, PytagoMap->N[ 0 ], Round );
+    printf(", ");
+    mpfr_out_str ( stdout, 10, 0, PytagoMap->N[ 1 ], Round );
+    printf(")");
+    fflush( stdout );
+
+    printf("\nCalculated P ist: (");
+    mpfr_out_str ( stdout, 10, 0, PytagoMap->P[ 0 ], Round );
+    printf(", ");
+    mpfr_out_str ( stdout, 10, 0, PytagoMap->P[ 1 ], Round );
+    printf(")");
+    fflush( stdout );
+
+    printf("\nCalculated T ist: (");
+    mpfr_out_str ( stdout, 10, 0, PytagoMap->T[ 0 ], Round );
+    printf(", ");
+    mpfr_out_str ( stdout, 10, 0, PytagoMap->T[ 1 ], Round );
+    printf(")");
+    fflush( stdout );
+
+    printf("\nCalculated degree of MY/ZN ist: ");
+    mpfr_out_str ( stdout, 10, 0, Degree, Round );
+    fflush( stdout );
+
+    printf("\nCalculated F ist: (");
+    mpfr_out_str ( stdout, 10, 0, PytagoMap->F[ 0 ], Round );
+    printf(", ");
+    mpfr_out_str ( stdout, 10, 0, PytagoMap->F[ 1 ], Round );
+    printf(")");
+    fflush( stdout );
+
+    printf("\nCalculated U ist: (");
+    mpfr_out_str ( stdout, 10, 0, PytagoMap->U[ 0 ], Round );
+    printf(", ");
+    mpfr_out_str ( stdout, 10, 0, PytagoMap->U[ 1 ], Round );
+    printf(")");
+    fflush( stdout );
+#endif
+
     /* Housekeeping */
     mpfr_clear( Diameter );
     mpfr_clear( Radians );
     mpfr_clear( Degree );
     mpfr_clear( Tmp[ 0 ] );
     mpfr_clear( Tmp[ 1 ] );
-    mpfr_clear( Tmp[ 2 ] );
-    mpfr_clear( Tmp[ 3 ] );
     mpfr_free_cache ();
     free( Tmp );
 }

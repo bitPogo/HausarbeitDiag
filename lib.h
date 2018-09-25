@@ -154,9 +154,13 @@ extern void degree2Rad (mpfr_t Return, mpfr_t Degree, mpfr_rnd_t Round );
  * @param Round | mpfr_rnd_t | which rounding to use
  */
 extern void rotatePoint( mpfr_t* Return, mpfr_t* Point, mpfr_t* Center, mpfr_t Degree, mpfr_rnd_t Round );
-
+/**
+ * Computtes the einheitsvektor
+ * @param Return | array of mpfr_t | n = 2 | the computed einheitsvektor
+ * @param Point | array of mpfr_t | n = 2 | Point which from which should be derrived
+ * @param Round | mpfr_rnd_t | which rounding to use
+ */
 extern void getEinheitsVector( mpfr_t* Return, mpfr_t* Point, mpfr_rnd_t Round );
-
 /**
  * Prints a error-message to stderr and quits the programm
  * @param Message | const char* | the message

@@ -1042,6 +1042,12 @@ extern void rotatePoint( mpfr_t* Return, mpfr_t* Point, mpfr_t* Center, mpfr_t D
     mpfr_free_cache();
 }
 
+/**
+ * Computtes the einheitsvektor
+ * @param Return | array of mpfr_t | n = 2 | the computed einheitsvektor
+ * @param Point | array of mpfr_t | n = 2 | Point which from which should be derrived
+ * @param Round | mpfr_rnd_t | which rounding to use
+ */
 extern void getEinheitsVector( mpfr_t* Return, mpfr_t* Point, mpfr_rnd_t Round )
 {
     mpfr_t Tmp1, Tmp2;
@@ -1053,6 +1059,8 @@ extern void getEinheitsVector( mpfr_t* Return, mpfr_t* Point, mpfr_rnd_t Round )
     mpfr_pow_ui( Tmp2, Point[ 1 ], 2, Round );
     mpfr_add( Tmp1, Tmp1, Tmp2, Round );
     mpfr_sqrt( Tmp1, Tmp1, Round );
+
+    mpfr_set_ui( Tmp2, 1, Round );
     mpfr_div( Tmp1, Tmp2, Tmp1, Round );
     mpfr_mul( Return[ 0 ], Point[ 0 ], Tmp1, Round );
     mpfr_mul( Return[ 1 ], Point[ 1 ], Tmp1, Round );

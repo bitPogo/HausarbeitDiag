@@ -354,5 +354,145 @@ Painter.arc( 175, 190.20813 + AddY, 165.20844, 0, Math.PI * 2, true);
 Painter.moveTo( 175, 190.20813 + AddY );
 Painter.arc( 175, 190.20813 + AddY, 99.027710, 0, Math.PI * 2, true);
 
+//Limits
+//P
+//Point P ist: (1.3414673e1, 1.0000000e1)
+Painter.moveTo( 134.14673, 100 + AddY)
+Painter.arc( 134.14673, 100 + AddY, 1, 0, Math.PI * 2, true);
+Painter.strokeText(
+    "P",
+    135.14673,
+    101 + AddY
+);
+
+//R
+//Point R ist: (2.1585327e1, 1.0000000e1)
+Painter.moveTo( 215.85327, 100 + AddY)
+Painter.arc( 215.85327, 100 + AddY, 1, 0, Math.PI * 2, true);
+Painter.strokeText(
+    "R",
+    216.85327,
+    101 + AddY
+);
+
+//X
+//Point X ist: (1.0000000e1, 8.1990204)
+Painter.moveTo( 100, 81.990204 + AddY)
+Painter.arc( 100, 81.990204 + AddY, 1, 0, Math.PI * 2, true);
+Painter.strokeText(
+    "X",
+    101,
+    82.990204 + AddY
+);
+
+//O
+//Point O ist: (2.5000000e1, 8.1990204)
+Painter.moveTo( 250, 81.990204 + AddY)
+Painter.arc( 250, 81.990204 + AddY, 1, 0, Math.PI * 2, true);
+Painter.strokeText(
+    "O",
+    250,
+    82.990204 + AddY
+);
+
+//M
+//Point M ist: (1.0000000e1, 4.3004684)
+Painter.moveTo( 100, 43.004684 + AddY)
+Painter.arc( 100, 43.004684 + AddY, 1, 0, Math.PI * 2, true);
+Painter.strokeText(
+    "M",
+    101,
+    43.004684 + AddY
+);
+
+//N
+// Point N ist: (2.5000000e1, 4.3004684)
+Painter.moveTo( 250, 43.004684 + AddY)
+Painter.arc( 250, 43.004684 + AddY, 1, 0, Math.PI * 2, true);
+Painter.strokeText(
+    "N",
+    251,
+    44.004684 + AddY
+);
+
+//Y
+//2.0810028e1, 9.6876373
+Painter.moveTo( 208.10028, 96.876373 + AddY )
+Painter.arc( 208.10028, 96.876373 + AddY, 1, 0, Math.PI * 2, true);
+Painter.strokeText(
+    "Y",
+    209.10028,
+    97.876373 + AddY
+);
+
+//V
+//1.4189957e1, 9.6876373
+Painter.moveTo( 141.89957, 96.876373 + AddY )
+Painter.arc( 141.89957, 96.876373 + AddY , 1, 0, Math.PI * 2, true);
+Painter.strokeText(
+    "V",
+    142.89957,
+    97.876373 + AddY
+);
+
+//T
+//2.4066803e1, 7.6086426
+Painter.moveTo( 240.66803, 76.086426 + AddY )
+Painter.arc( 240.66803, 76.086426 + AddY, 1, 0, Math.PI * 2, true);
+Painter.strokeText(
+    "T",
+    241.66803,
+    77.086426 + AddY
+);
+
+//I
+//Point I ist: (2.4697510e1, 5.6865692)
+Painter.moveTo( 246.97510, 56.865692 + AddY )
+Painter.arc( 246.97510, 56.865692 + AddY, 1, 0, Math.PI * 2, true);
+Painter.strokeText(
+    "I",
+    247.97510,
+    57.865692 + AddY
+);
+
+//S
+//Point S ist: (2.4519531e1, 4.0654144)
+Painter.moveTo( 245.19531, 40.654144 + AddY )
+Painter.arc( 245.19531, 40.654144 + AddY, 1, 0, Math.PI * 2, true);
+Painter.strokeText(
+    "S",
+    246.19531,
+    41.654144 + AddY
+);
+
+//U
+//Point U ist: (1.0933197e1, 7.6086426)
+Painter.moveTo( 109.33197,  76.086426 + AddY )
+Painter.arc( 109.33197,  76.086426 + AddY, 1, 0, Math.PI * 2, true);
+Painter.strokeText(
+    "U",
+    110.33197,
+    77.086426 + AddY
+);
+//J
+//Point J ist: (1.0302490e1, 5.6865692)
+Painter.moveTo( 103.02490, 56.865692 + AddY )
+Painter.arc( 103.02490, 56.865692 + AddY, 1, 0, Math.PI * 2, true);
+Painter.strokeText(
+    "J",
+    104.02490,
+    57.865692 + AddY
+);
+
+//F
+//Point F ist: (1.0480484e1, 4.0654144)
+Painter.moveTo( 104.80484, 40.654144 + AddY )
+Painter.arc( 104.80484, 40.654144 + AddY, 1, 0, Math.PI * 2, true);
+Painter.strokeText(
+    "F",
+    104.80484,
+    40.654144 + AddY
+);
+
 Painter.stroke()
 Painter.closePath();

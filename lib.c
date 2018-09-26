@@ -221,7 +221,7 @@ extern unsigned short intersectLines(
     mpfr_init( X );
     mpfr_init( Y );
     mpfr_init( Tmp1 );
-#ifdef DEBUG
+#ifdef DEBUGLIB
     printf( "\nStart line-line-intersection." );
     fflush( stdout );
 #endif
@@ -233,7 +233,7 @@ extern unsigned short intersectLines(
     mpfr_sub( DiffAX, PointAStart[ 0 ], PointAEnd[ 0 ], Round );
     /* PointAStart_y - PointAEnd_y */
     mpfr_sub( DiffAY, PointAStart[ 1 ], PointAEnd[ 1 ], Round );
-#ifdef DEBUG
+#ifdef DEBUGLIB
     printf( "\nDiffAX is:" );
     mpfr_out_str ( stdout, 10, 0, DiffAX, Round );
     printf( "\nDiffAY is:" );
@@ -248,7 +248,7 @@ extern unsigned short intersectLines(
     mpfr_sub( DiffBX, PointBStart[ 0 ], PointBEnd[ 0 ], Round );
     /* PointBStart_y - PointBEnd_y */
     mpfr_sub( DiffBY, PointBStart[ 1 ], PointBEnd[ 1 ], Round );
-#ifdef DEBUG
+#ifdef DEBUGLIB
     printf( "\nDiffBX is:" );
     mpfr_out_str ( stdout, 10, 0, DiffBX, Round );
     printf( "\nDiffBY is:" );
@@ -257,7 +257,7 @@ extern unsigned short intersectLines(
 #endif
     /* div = det( DiffAX, DiffAY, DiffBX, DiffBY ) */
     det( DiffAX, DiffAY, DiffBX, DiffBY, Div, Round );
-#ifdef DEBUG
+#ifdef DEBUGLIB
     printf( "\nDiv is:" );
     mpfr_out_str ( stdout, 10, 0, Div, Round );
     fflush( stdout );
@@ -265,7 +265,7 @@ extern unsigned short intersectLines(
     Compare = mpfr_cmp_si( Div, 0 );
     if( CMP_EQUAL == Compare )
     {
-#ifdef DEBUG
+#ifdef DEBUGLIB
         printf( "\nNo touchpoint found." );
 #endif
         /* Housekeeping */
@@ -291,7 +291,7 @@ extern unsigned short intersectLines(
     det( PointAStart[ 0 ], PointAStart[ 1 ], PointAEnd[ 0 ], PointAEnd[ 1 ], DA, Round );
     /* det( PointBStart, PointBEnd ) */
     det( PointBStart[ 0 ], PointBStart[ 1 ], PointBEnd[ 0 ], PointBEnd[ 1 ], DB, Round );
-#ifdef DEBUG
+#ifdef DEBUGLIB
     printf( "\nDA is:" );
     mpfr_out_str ( stdout, 10, 0, DA, Round );
     printf( "\nDB is:" );
@@ -315,13 +315,13 @@ extern unsigned short intersectLines(
     det( DA, DB, DiffAY, DiffBY, Tmp1, Round );
     /* det( D_x, D_y, DiffAX, DiffBX ) / div */
     mpfr_div( Return[ 1 ], Tmp1, Div, Round );
-#ifdef DEBUG
+#ifdef DEBUGLIB
     printf( "\nIntersection-X is:" );
     mpfr_out_str ( stdout, 10, 0, Return[ 0 ], Round );
     fflush( stdout );
 #endif
 
-#ifdef DEBUG
+#ifdef DEBUGLIB
     printf( "\nIntersection-Y is:" );
     mpfr_out_str ( stdout, 10, 0, Return[ 1 ], Round );
     fflush( stdout );
@@ -363,7 +363,7 @@ extern unsigned short intersectCircleLine(
 {
         mpfr_t ABX, ABXExp, ABY, ABYExp, ACX, ACXExp, ACY, ACYExp, A, C, Q, BBy2, PBy2, Found, AbScalingFactor1, AbScalingFactor2, Tmp1, Tmp2;
         int Compare;
-#ifdef DEBUG
+#ifdef DEBUGLIB
     printf( "\nStart circle-line-intersection." );
     fflush( stdout );
 #endif
@@ -401,7 +401,7 @@ extern unsigned short intersectCircleLine(
         mpfr_sub( ACX, Center[ 0 ], PointA[ 0 ], Round );
         /* C_y - A_y */
         mpfr_sub( ACY, Center[ 1 ], PointA[ 1 ], Round );
-#ifdef DEBUG
+#ifdef DEBUGLIB
         printf( "\nABX is:" );
         mpfr_out_str ( stdout, 10, 0, ABX, Round );
         printf( "\nABY is:" );
@@ -420,7 +420,7 @@ extern unsigned short intersectCircleLine(
         mpfr_pow_ui( ABYExp, ABY, 2, Round );
         /* ABX * baX + baY * baY */
         mpfr_add( A, ABXExp, ABYExp, Round );
-#ifdef DEBUG
+#ifdef DEBUGLIB
         printf( "\nA is:" );
         mpfr_out_str ( stdout, 10, 0, A, Round );
         fflush( stdout );
@@ -433,7 +433,7 @@ extern unsigned short intersectCircleLine(
         mpfr_mul( Tmp2, ABY, ACY, Round );
         /* ABX*ACX + ABY*ACY */
         mpfr_add( BBy2, Tmp1, Tmp2, Round );
-#ifdef DEBUG
+#ifdef DEBUGLIB
         printf( "\nBBy2 is:" );
         mpfr_out_str ( stdout, 10, 0, BBy2, Round );
         fflush( stdout );
@@ -450,7 +450,7 @@ extern unsigned short intersectCircleLine(
         mpfr_add( Tmp2, ACXExp, ACYExp, Round );
         /* ACX^2 + ACY^2 - Radius^2 */
         mpfr_sub( C, Tmp2, Tmp1, Round );
-#ifdef DEBUG
+#ifdef DEBUGLIB
         printf( "\nC is:" );
         mpfr_out_str ( stdout, 10, 0, C, Round );
         fflush( stdout );
@@ -458,7 +458,7 @@ extern unsigned short intersectCircleLine(
 
         /* PBy2 = BBy2/a */
         mpfr_div( PBy2, BBy2, A, Round );
-#ifdef DEBUG
+#ifdef DEBUGLIB
         printf( "\nPBy2 is:" );
         mpfr_out_str ( stdout, 10, 0, PBy2, Round );
         fflush( stdout );
@@ -466,7 +466,7 @@ extern unsigned short intersectCircleLine(
 
         /* Q = C / A */
         mpfr_div( Q, C, A, Round );
-#ifdef DEBUG
+#ifdef DEBUGLIB
         printf( "\nQ is:" );
         mpfr_out_str ( stdout, 10, 0, Q, Round );
         fflush( stdout );
@@ -476,7 +476,7 @@ extern unsigned short intersectCircleLine(
         mpfr_pow_ui( Tmp1, PBy2, 2, Round );
         /* PBy2^2 - Q */
         mpfr_sub( Found, Tmp1, Q, Round );
-#ifdef DEBUG
+#ifdef DEBUGLIB
     printf( "\nFound:" );
     mpfr_out_str ( stdout, 10, 0, Found, Round );
     fflush( stdout );
@@ -484,7 +484,7 @@ extern unsigned short intersectCircleLine(
         Compare = mpfr_cmp_ui( Found, 0 );
         if( CMP_LESS == Compare )
         {
-#ifdef DEBUG
+#ifdef DEBUGLIB
             printf( "\nNoting found." );
             fflush( stdout );
 #endif
@@ -522,14 +522,14 @@ extern unsigned short intersectCircleLine(
         mpfr_mul_si( Tmp1, PBy2, -1, Round );
         /* -1 * PBy2 + sqrt( Found ) */
         mpfr_add( AbScalingFactor1, Tmp1, Tmp2, Round );
-#ifdef DEBUG
+#ifdef DEBUGLIB
         printf( "\nAbscalingFactor1 is:" );
         mpfr_out_str ( stdout, 10, 0, AbScalingFactor1, Round );
         fflush( stdout );
 #endif
         /* -1 * PBy2 - sqrt( Found ) */
         mpfr_sub( AbScalingFactor2, Tmp1, Tmp2, Round );
-#ifdef DEBUG
+#ifdef DEBUGLIB
         printf( "\nAbscalingFactor2 is:" );
         mpfr_out_str ( stdout, 10, 0, AbScalingFactor2, Round );
         fflush( stdout );
@@ -546,19 +546,19 @@ extern unsigned short intersectCircleLine(
         mpfr_mul( Tmp1, ABY, AbScalingFactor1, Round );
         /* PointA_x - ABY * AbScalingFactor1 */
         mpfr_sub( Return[ 1 ], PointA[ 1 ], Tmp1, Round );
-#ifdef DEBUG
+#ifdef DEBUGLIB
         printf( "\nIntersection-1-X is:" );
         mpfr_out_str ( stdout, 10, 0, Return[ 0 ], Round );
         fflush( stdout );
 #endif
-#ifdef DEBUG
+#ifdef DEBUGLIB
         printf( "\nIntersection-1-Y is:" );
         mpfr_out_str ( stdout, 10, 0, Return[ 1 ], Round );
         fflush( stdout );
 #endif
         if( CMP_EQUAL == Compare )
         {
-#ifdef DEBUG
+#ifdef DEBUGLIB
             printf( "\nOne touch found." );
             fflush( stdout );
 #endif
@@ -597,12 +597,12 @@ extern unsigned short intersectCircleLine(
         mpfr_mul( Tmp1, ABY, AbScalingFactor2, Round );
         /* PointA_x - ABY * AbScalingFactor2 */
         mpfr_sub( Return[ 3 ], PointA[ 1 ], Tmp1, Round );
-#ifdef DEBUG
+#ifdef DEBUGLIB
         printf( "\nIntersection-2-X is:" );
         mpfr_out_str ( stdout, 10, 0, Return[ 2 ], Round );
         fflush( stdout );
 #endif
-#ifdef DEBUG
+#ifdef DEBUGLIB
         printf( "\nIntersection-2-Y is:" );
         mpfr_out_str ( stdout, 10, 0, Return[ 3 ], Round );
         fflush( stdout );
@@ -653,7 +653,7 @@ extern unsigned short intersectCircles(
     mpfr_t ABX, ABXExp, ABY, ABYExp, DistanceCenter, X, Y, RadiusAExp, RadiusBExp, EX0, EX1, EY0, EY1, Tmp1;
     int Compare;
 
-#ifdef DEBUG
+#ifdef DEBUGLIB
     printf( "\nStart circle-circle-intersection." );
     fflush( stdout );
 #endif
@@ -697,7 +697,7 @@ extern unsigned short intersectCircles(
     /* y_B - y_A */
     mpfr_sub( ABY, BCenter[ 1 ], ACenter[ 1 ], Round );
 
-#ifdef DEBUG
+#ifdef DEBUGLIB
     printf( "\nABX is:" );
     mpfr_out_str ( stdout, 10, 0, ABX, Round );
     printf( "\nABY is:" );
@@ -719,7 +719,7 @@ extern unsigned short intersectCircles(
 
     /* ... */
     mpfr_sqrt( DistanceCenter, DistanceCenter, Round );
-#ifdef DEBUG
+#ifdef DEBUGLIB
     printf( "\nDistance to center is:" );
     mpfr_out_str ( stdout, 10, 0, DistanceCenter, Round );
     fflush( stdout );
@@ -728,7 +728,7 @@ extern unsigned short intersectCircles(
     Compare = mpfr_cmp_si( DistanceCenter, 0 );
     if( CMP_EQUAL == Compare )
     {
-#ifdef DEBUG
+#ifdef DEBUGLIB
         printf( "\nno intersection found." );
         fflush( stdout );
 #endif
@@ -768,7 +768,7 @@ extern unsigned short intersectCircles(
     mpfr_mul_ui( X, DistanceCenter, 2, Round );
     /* ( ARadius^2 + Distance^2- BRadius^2)/(2*Distance) */
     mpfr_div( X, Tmp1, X, Round );
-#ifdef DEBUG
+#ifdef DEBUGLIB
     printf( "\nDistance X is:" );
     mpfr_out_str ( stdout, 10, 0, X, Round );
     fflush( stdout );
@@ -806,7 +806,7 @@ extern unsigned short intersectCircles(
     {
         mpfr_sqrt( Y, Y, Round );
     }
-#ifdef DEBUG
+#ifdef DEBUGLIB
     printf( "\nDistance Y is:" );
     mpfr_out_str ( stdout, 10, 0, Y, Round );
     fflush( stdout );
@@ -832,18 +832,18 @@ extern unsigned short intersectCircles(
     mpfr_add( Return[ 1 ], ACenter[ 1 ], Tmp1, Round );
     if( CMP_EQUAL == Compare )
     {
-#ifdef DEBUG
+#ifdef DEBUGLIB
         printf( "\nFound only one intersection." );
         fflush( stdout );
 #endif
 
-#ifdef DEBUG
+#ifdef DEBUGLIB
         printf( "\nIntersection-1-X is:" );
         mpfr_out_str ( stdout, 10, 0, Return[ 0 ], Round );
         fflush( stdout );
 #endif
 
-#ifdef DEBUG
+#ifdef DEBUGLIB
         printf( "\nIntersection-1-Y is:" );
         mpfr_out_str ( stdout, 10, 0, Return[ 1 ], Round );
         fflush( stdout );
@@ -893,22 +893,22 @@ extern unsigned short intersectCircles(
 
     /* Q^1_y -= y * EY1 */
     mpfr_sub( Return[ 1 ], Return[ 1 ], Tmp1, Round );
-#ifdef DEBUG
+#ifdef DEBUGLIB
     printf( "\nIntersection-1-X is:" );
     mpfr_out_str ( stdout, 10, 0, Return[ 0 ], Round );
     fflush( stdout );
 #endif
-#ifdef DEBUG
+#ifdef DEBUGLIB
     printf( "\nIntersection-1-Y is:" );
     mpfr_out_str ( stdout, 10, 0, Return[ 1 ], Round );
     fflush( stdout );
 #endif
-#ifdef DEBUG
+#ifdef DEBUGLIB
     printf( "\nIntersection-2-X is:" );
     mpfr_out_str ( stdout, 10, 0, Return[ 2 ], Round );
     fflush( stdout );
 #endif
-#ifdef DEBUG
+#ifdef DEBUGLIB
     printf( "\nIntersection-2-Y is:" );
     mpfr_out_str ( stdout, 10, 0, Return[ 3 ], Round );
     fflush( stdout );
@@ -1389,7 +1389,7 @@ int main()
             MPFR_RNDD
     );
     printf("\n");
-#ifdef DEBUG
+#ifdef DEBUGLIB
     printf( "\nX is:" );
     mpfr_out_str ( stdout, 10, 0, BCenter[ 0 ], MPFR_RNDD );
     printf( "\nY is:" );
@@ -1397,7 +1397,7 @@ int main()
 #endif
     printf("\n");
     mirrowPointOnX( Intersection, BCenter, MPFR_RNDD );
-#ifdef DEBUG
+#ifdef DEBUGLIB
     printf( "\nX is:" );
     mpfr_out_str ( stdout, 10, 0, Intersection[ 0 ], MPFR_RNDD );
     printf( "\nY is:" );
@@ -1405,7 +1405,7 @@ int main()
 #endif
     printf("\n");
     mirrowPointOnY( Intersection, Intersection, MPFR_RNDD );
-#ifdef DEBUG
+#ifdef DEBUGLIB
     printf( "\nX is:" );
     mpfr_out_str ( stdout, 10, 0, Intersection[ 0 ], MPFR_RNDD );
     printf( "\nY is:" );
@@ -1413,7 +1413,7 @@ int main()
 #endif
     printf("\n");
     mirrowPoint( Intersection, Intersection, MPFR_RNDD );
-#ifdef DEBUG
+#ifdef DEBUGLIB
     printf( "\nX is:" );
     mpfr_out_str ( stdout, 10, 0, Intersection[ 0 ], MPFR_RNDD );
 

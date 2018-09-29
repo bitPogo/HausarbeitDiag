@@ -1,8 +1,11 @@
 .idea/
 cmake-build-debug
+mainBug.c
+mainBug2.c
+mainOld.c
 *.class
 *.py
 *.java
-pytagoGlob
+ptMap
 *.html
 *.js

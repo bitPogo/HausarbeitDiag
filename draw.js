@@ -240,8 +240,16 @@ Painter.strokeText(
     110.04272,
     48.605881
 );
+
+//Parallelkreise
+Painter.moveTo( 175, 126.17615 );
+Painter.arc( 175, 126.17615, 88.537140, 0, Math.PI * 2, true);
+
 Painter.stroke()
 Painter.closePath();
+
+
+
 
 //Glob
 Painter.beginPath();
@@ -353,6 +361,9 @@ Painter.arc( 175, 190.20813 + AddY, 165.20844, 0, Math.PI * 2, true);
 //KL
 Painter.moveTo( 175, 190.20813 + AddY );
 Painter.arc( 175, 190.20813 + AddY, 99.027710, 0, Math.PI * 2, true);
+//EA
+Painter.moveTo( 175, 58.541718 + AddY );
+Painter.arc( 175, 58.541718 + AddY, 165.20844, 0, Math.PI * 2, true);
 
 //Limits
 //P
@@ -493,6 +504,20 @@ Painter.strokeText(
     104.80484,
     40.654144 + AddY
 );
+
+
+//Y'
+//Point Y' ist: (1.0544083e1, 1.1972412e1)
+Painter.moveTo( 105.44083, 119.72412 + AddY )
+Painter.arc( 105.44083, 119.72412 + AddY, 1, 0, Math.PI * 2, true);
+Painter.strokeText(
+    "Y'",
+    105.44083, 119.72412 + AddY
+);
+
+
+
+
 
 Painter.stroke()
 Painter.closePath();

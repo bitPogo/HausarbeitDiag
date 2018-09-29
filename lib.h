@@ -26,90 +26,124 @@
 #ifndef DIAG_LIB_H
 #define DIAG_LIB_H
 
+typedef struct Point
+{
+    mpfr_t X;
+    mpfr_t Y;
+} Point;
+
 /*-------------------LibFunctions Declaration---------------*/
 /**
- * Transform grade, minutes and seconds to grades
- * @param Return | mpfr_t | the computed Grad
- * @param Grad | mpfr_t | the start grades
+ * Transform degree, minutes and seconds to minutes
+ * @param Return | mpfr_t | the computed minutes
+ * @param degree | mpfr_t | the start degrees
  * @param Minutes | mpfr_t | the start minutes
  * @param Seconds | mpfr_t | the start seconds
  * @param Round | mpfr_rnd_t | which rounding to use
  */
-extern void toGrad(
+extern void toSeconds(
         mpfr_t Return,
-        mpfr_t Grade,
+        mpfr_t Degree,
+        mpfr_t Minutes,
+        mpfr_t Seconds,
+        mpfr_rnd_t Round
+);
+/**
+ * Transform degree, minutes and seconds to seconds
+ * @param Return | mpfr_t | the computed seconds
+ * @param degree | mpfr_t | the start degrees
+ * @param Minutes | mpfr_t | the start minutes
+ * @param Seconds | mpfr_t | the start seconds
+ * @param Round | mpfr_rnd_t | which rounding to use
+ */
+extern void toMinutes(
+        mpfr_t Return,
+        mpfr_t Degree,
+        mpfr_t Minutes,
+        mpfr_t Seconds,
+        mpfr_rnd_t Round
+);
+/**
+ * Transform degree, minutes and seconds to degrees
+ * @param Return | mpfr_t | the computed degree
+ * @param degree | mpfr_t | the start degrees
+ * @param Minutes | mpfr_t | the start minutes
+ * @param Seconds | mpfr_t | the start seconds
+ * @param Round | mpfr_rnd_t | which rounding to use
+ */
+extern void toDegree(
+        mpfr_t Return,
+        mpfr_t Degree,
         mpfr_t Minutes,
         mpfr_t Seconds,
         mpfr_rnd_t Round
 );
 /**
  * Mirrows a point on x-axis
- * @param Return | array of mpfr_t | n = 2 | the mirrowed point
+ * @param Return | Point | the mirrowed point
  * @param X | mpfr_t | Zeropoint of X
- * @param Point | array of mpfr_t | n = 2 | the original point
+ * @param Point | Point | the original point
  * @param Round | mpfr_rnd_t | which rounding to use
  */
-extern void mirrowPointOnX( mpfr_t* Return, mpfr_t X, mpfr_t* Point, mpfr_rnd_t Round );
+extern void mirrowPointOnX( Point* Return, mpfr_t X, Point* Punkt, mpfr_rnd_t Round );
 /**
  * Mirrows a point on y-axis
- * @param Return | array of mpfr_t | n = 2 | the mirrowed point
+ * @param Return | Point | the mirrowed point
  * @param X | mpfr_t | Zeropoint of X
- * @param Point | array of mpfr_t | n = 2 | the original point
+ * @param Point | Point | the original point
  * @param Round | mpfr_rnd_t | which rounding to use
  */
-extern void mirrowPointOnY( mpfr_t* Return, mpfr_t Y, mpfr_t* Point, mpfr_rnd_t Round );
+extern void mirrowPointOnY( Point* Return, mpfr_t Y, Point* Punkt, mpfr_rnd_t Round );
 /**
  * Mirrows a point on x- and y-axis
- * @param Return | array of mpfr_t | n = 2 | the mirrowed point
- * @param X | mpfr_t | Zeropoint of X
- * @param Y | mpfr_t | Zeropoint of Y
- * @param Point | array of mpfr_t | n = 2 | the original point
+ * @param Return | Point | the mirrowed point
+ * @param Mirrow | Point | the mirrow
+ * @param Point | Point | the original point
  * @param Round | mpfr_rnd_t | which rounding to use
  */
-extern void mirrowPoint( mpfr_t* Return, mpfr_t X, mpfr_t Y, mpfr_t* Point, mpfr_rnd_t Round );
+extern void mirrowPoint( Point* Return, Point* Mirrow, Point* Punkt, mpfr_rnd_t Round );
 /**
  * intersectLine computes the touchpoints of to given a line and a second line
- * @param Return | array of mpfr_t | n = 2 | the computed touchpoints
- * @param PointAStart | array of mpfr_t | n = 2 | the startpoint of the first line
- * @param PointAEnd | array of mpfr_t | n = 2 | the endpoint of the first line
- * @param PointBStart | array of mpfr_t | n = 2 | the startpoint of the second line
- * @param PointBEnd | array of mpfr_t | n = 2 | the endpoint of the second line
+ * @param Return | Point | the computed touchpoints
+ * @param PointAStart | Point | the startpoint of the first line
+ * @param PointAEnd | Point | the endpoint of the first line
+ * @param PointBStart | Point | the startpoint of the second line
+ * @param PointBEnd | Point | the endpoint of the second line
  * @param Round | mpfr_rnd_t | which rounding to use
  * @return int | SUCCESS or NO_INTERSECTION
  */
 extern unsigned short intersectLines(
-        mpfr_t* Return,
-        mpfr_t* PointAStart,
-        mpfr_t* PointAEnd,
-        mpfr_t* PointBStart,
-        mpfr_t* PointBEnd,
+        Point* Return,
+        Point* PunktAStart,
+        Point* PunktAEnd,
+        Point* PunktBStart,
+        Point* PunktBEnd,
         mpfr_rnd_t Round
 );
 
 /**
  * intersectLine computes the touchpoints of to given a circle and a line
  * @param Return | array of mpfr_t | n = 4 | the computed touchpoints
- * @param PointA | array of mpfr_t | n = 2 | startpoint of the given line
- * @param PointB | array of mpfr_t | n = 2 | startpoint of the given line
- * @param Center | array of mpfr_t | n = 2 | circlecenter of the given circle
+ * @param PointA | Point | startpoint of the given line
+ * @param PointB | Point | startpoint of the given line
+ * @param Center | Point | circlecenter of the given circle
  * @param Radius | mpfr_t | the radius of the given circle
- * @param Round | mpfr_rnd_t | SUCCESS or NO_INTERSECTION or ONE_TOUCH
- * @return
+ * @param Round | mpfr_rnd_t | which rounding to use
+ * @return int | SUCCESS or NO_INTERSECTION or ONE_TOUCH
  */
 extern unsigned short intersectCircleLine(
         mpfr_t* Return,
-        mpfr_t* PointA,
-        mpfr_t* PointB,
-        mpfr_t* Center,
+        Point* PointA,
+        Point* PointB,
+        Point* Center,
         mpfr_t Radius,
         mpfr_rnd_t Round
 );
-
 /**
  * intersectCircles computes the touchpoints of to given circles
  * @param Return | array of mpfr_t | n = 4 | the computed touchpoints
- * @param ACenter | array of mpfr_t | n = 2 | x/y - coordinates of circle A
- * @param BCenter | array of mpfr_t | n = 2 | x/y - coordinates of circle B
+ * @param ACenter | Point | x/y - coordinates of circle A
+ * @param BCenter | Point | x/y - coordinates of circle B
  * @param ARadius | mpfr_t | the radius of circle A
  * @param BRadius | mpfr_t | the radius of circle A
  * @param Round | mpfr_rnd_t | which rounding to use
@@ -117,8 +151,8 @@ extern unsigned short intersectCircleLine(
  */
 extern unsigned short intersectCircles(
         mpfr_t* Return,
-        mpfr_t* ACenter,
-        mpfr_t* BCenter,
+        Point* ACenter,
+        Point* BCenter,
         mpfr_t ARadius,
         mpfr_t BRadius,
         mpfr_rnd_t Round
@@ -131,7 +165,7 @@ extern unsigned short intersectCircles(
  */
 extern unsigned short isDigit( char Char, unsigned  short IsHex );
 /**
- * Caculate the grade by given radians and
+ * Caculate the degree by given radians and
  * @param Return | mpfr_t | the computed degree
  * @param Radians | mpfr_t | the given radians
  * @param Diameter | mpfr_t | the given diameter
@@ -139,48 +173,64 @@ extern unsigned short isDigit( char Char, unsigned  short IsHex );
  */
 extern void getDegreeOnCircle( mpfr_t Return, mpfr_t Radians, mpfr_t Diameter, mpfr_rnd_t Round );
 /**
- * Caculate the grade by given radians and
+ * Caculate the degree by given radians and
  * @param Return | mpfr_t | the computed radians
  * @param Degree | mpfr_t | the given degree
  * @param Diameter | mpfr_t | the given diameter
  * @param Round | mpfr_rnd_t | which rounding to use
  */
-        extern void getRadiansOnCircle( mpfr_t Return, mpfr_t Degree, mpfr_t Diameter, mpfr_rnd_t Round );
+extern void getRadiansOnCircle( mpfr_t Return, mpfr_t Degree, mpfr_t Diameter, mpfr_rnd_t Round );
 /**
  * Converts degrees to rad
  * @param Return | mpfr_t | the computed radians
  * @param Degree | mpfr_t | the given degrees
  * @param Round | mpfr_rnd_t | which rounding to use
  */
-extern void degree2Rad (mpfr_t Return, mpfr_t Degree, mpfr_rnd_t Round );
+extern void degree2Rad(mpfr_t Return, mpfr_t Degree, mpfr_rnd_t Round );
+/**
+ * Converts rad to degree
+ * @param Return | mpfr_t | the computed degree
+ * @param Rad | mpfr_t | the given rads
+ * @param Round | mpfr_rnd_t | which rounding to use
+ */
+extern void rad2Degree (mpfr_t Return, mpfr_t Rad, mpfr_rnd_t Round );
 /**
  * Rotates a point at a given Point
- * @param Return | array of mpfr_t | n = 2 | the computed rotated point
- * @param Point | array of mpfr_t | n = 2 | Point which should be rotated
- * @param Center | array of mpfr_t | n = 2 | Point which should be the center of rotation
+ * @param Return | Point | the computed rotated point
+ * @param Point | Point | Point which should be rotated
+ * @param Center | Point | Point which should be the center of rotation
  * @param Degree | mpfr_t | degree for rotation
  * @param Round | mpfr_rnd_t | which rounding to use
  */
-extern void rotatePoint( mpfr_t* Return, mpfr_t* Point, mpfr_t* Center, mpfr_t Degree, mpfr_rnd_t Round );
+extern void rotatePoint( Point* Return, Point* Punkt, Point* Center, mpfr_t Degree, mpfr_rnd_t Round );
 /**
  * Computtes the einheitsvektor
- * @param Return | array of mpfr_t | n = 2 | the computed einheitsvektor
- * @param Point | array of mpfr_t | n = 2 | Point which from which should be derrived
+ * @param Return | Point | the computed einheitsvektor
+ * @param Point | Point | Point which from which should be derrived
  * @param Round | mpfr_rnd_t | which rounding to use
  */
-extern void getEinheitsVector( mpfr_t* Return, mpfr_t* Point, mpfr_rnd_t Round );
+extern void getEinheitsVector( Point* Return, Point* Punkt, mpfr_rnd_t Round );
+/**
+ * Calculates the distance between tow points
+ * @param Return | mpfr_t | the computed distance
+ * @param PointA | Point | Startpoint
+ * @param PointB | Point | Endpoint
+ * @param Round | mpfr_rnd_t | which rounding to use
+ */
+extern void getDistanceOfPoints( mpfr_t Return, Point* PunktA, Point* PunktB, mpfr_rnd_t Round );
 /**
  * Prints a error-message to stderr and quits the programm
  * @param Message | const char* | the message
  */
 extern void errorAndOut( const char* Message );
 /**
- * Checks if a given string is nummeric or not
- * Also hexstrings with prefix x|X or ocatalstrings with prefix o|O are allowed
+ * Checks if a given string is numeric
  * @param String | const char* | the given input string
+ * @param Signed | unsigned short | if the given value can be signed
+ * @param Float | unsgined short | if the given value can be a float
  * @return -1 if it's not a number or Base 8|10|16
  */
-extern short validateString( const char* String );
+extern unsigned short validateString( const char* String, unsigned short Signed, unsigned short Float );
 /**
  * Returns a substring of given String
  * @param Source | char* | the input string
@@ -189,4 +239,6 @@ extern short validateString( const char* String );
  * @return | char* | the computed subset
  */
 extern char* substring( char* Source, int From, int Length );
+
+extern void cleanUpLib();
 #endif
